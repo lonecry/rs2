@@ -1,0 +1,30 @@
+{
+    "pages": [
+        "pages/indexswiper/main",
+        "pages/login/main",
+        "pages/detailforworker/main",
+        "pages/detail/main",
+        "pages/report/main",
+        "pages/locationSearch/main",
+        "pages/changecell2/main",
+        "pages/changecell1/main",
+        "pages/index/main",
+        "pages/pswreset/main",
+        "pages/register/main",
+        "pages/logs/main"
+    ],
+    "window": {
+        "backgroundTextStyle": "light",
+        "navigationBarBackgroundColor": "#fff",
+        "navigationBarTitleText": "WeChat",
+        "navigationBarTextStyle": "black"
+    },
+    "permission": {
+        "scope.userLocation": {
+            "desc": "你的位置信息将用于效果展示"
+        }
+    },
+    "navigateToMiniProgramAppIdList": [
+        "wx32c1592049a80f89"
+    ]
+}

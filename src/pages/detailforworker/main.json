@@ -1,0 +1,18 @@
+{
+    "navigationBarTitleText": "detail for worker",
+    "usingComponents": {
+        "i-row": "/static/iview/row/index",
+        "i-col": "/static/iview/col/index",
+        "i-panel": "/static/iview/panel/index",
+        "i-input": "/static/iview/input/index",
+        "i-button": "/static/iview/button/index",
+        "i-icon": "/static/iview/icon/index",
+        "i-toast": "../../../static/iview/toast/index",
+        "van-datetime-picker": "/static/vant/datetime-picker/index",
+        "van-checkbox-group": "/static/vant/checkbox-group/index",
+        "van-checkbox": "/static/vant/checkbox/index",
+        "van-popup": "/static/vant/popup/index",
+        "i-checkbox-group": "/static/iview/checkbox-group/index",
+        "i-checkbox": "/static/iview/checkbox/index"
+    }
+}
