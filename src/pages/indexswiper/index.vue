@@ -392,6 +392,7 @@
                                   url: '../login/main',
                               })
             }
+            wx.showShareMenu();
         },
     }
 </script>

@@ -25,7 +25,7 @@
     export default {
         data() {
             return {
-                cell: '13888888888',
+                cell: '13111111111',
                 psw: '12345678'
             }
         },
@@ -52,7 +52,7 @@
                 var wx = mpvue;
 
                 wx.request({
-                    url: 'https://hd.xmountguan.com/railway/user.aspx?func=login&mobile=' + this.cell + '&pwd=' + this.psw + '&role=1', //仅为示例，并非真实的接口地址
+                    url: 'https://hd.xmountguan.com/railway/user.aspx?func=login&mobile=' + this.cell + '&pwd=' + this.psw + '&role=0', //仅为示例，并非真实的接口地址
 
                     success(res) {
                         console.log(res.data)
@@ -90,7 +90,7 @@
             // let app = getApp()
         },
         onShow() {
-
+            wx.showShareMenu();
         }
     }
 </script>
