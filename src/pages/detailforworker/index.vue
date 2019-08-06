@@ -2,7 +2,7 @@
     <div style="padding-bottom:150rpx;">
         <div class="ipts">
             <span class="ititle">报修单号</span>
-            <span class="ript">{{detail.origin.danhao}}</span>
+            <span class="ript">{{origin.danhao}}</span>
         </div>
         <div class="ipts">
             <span class="ititle">状态</span>
@@ -26,24 +26,24 @@
         </div>
         <div class="ipts">
             <span class="ititle">报修人姓名</span>
-            <span class="ript">{{detail.origin.name}}</span>
+            <span class="ript">{{origin.name}}</span>
         </div>
         <div class="ipts">
             <span class="ititle">手机号</span>
-            <span class="ript phone" @click='makeacall' :data-cell="detail.origin.phone">{{detail.origin.phone}}</span>
+            <span class="ript phone" @click='makeacall' :data-cell="origin.phone">{{origin.phone}}</span>
         </div>
         <div class="ipts">
             <span class="ititle">报修类型</span>
-            <span class="ript ">{{detail.origin.type}}</span>
+            <span class="ript ">{{origin.type}}</span>
         </div>
         <div class="ipts">
             <span class="ititle">报修内容</span>
-            <span class="ript riptcontent">{{detail.origin.content[0]}}</span>
+            <span class="ript riptcontent">{{origin.content}}</span>
         </div>
         <div class="ipts">
             <span class="ititle imgs ">现场图片:</span>
             <div style="margin-left:45rpx;width:auto;">
-                <div class="imgbox" v-for="(item,index) in detail.origin.imgsUrl" :key="index">
+                <div class="imgbox" v-for="(item,index) in origin.imgsUrl" :key="index">
                     <img :src="item" :mode="'widthFix'" @click='preview(index)' class="slt" alt="缩略图">
                 </div>
             </div>
@@ -52,16 +52,16 @@
             <span class="ititle">车站</span>
             <div class="loca">
                 <i-icon style="position:relative;top:-4rpx;" type="coordinates_fill" size="26" color="#2d8cf0" class="usericon" />
-                <span class="spans  ">{{detail.origin.station}}</span>
+                <span class="spans  ">{{origin.station}}</span>
             </div>
         </div>
         <div class="ipts">
             <span class="ititle" style="float: none;">详细位置描述</span>
-            <span class="address addressworker">{{detail.origin.address }}</span>
+            <span class="address addressworker">{{origin.address }}</span>
         </div>
         <!--   <div class="ipts">
                <span class="ititle">台单号：</span>
-               <span class="ript">{{detail.origin.taidanhao}}</span>
+               <span class="ript">{{origin.taidanhao}}</span>
            </div>
           -->
         <i-row :class="'buttons'" v-if="peopletype=='gz'">
@@ -88,7 +88,7 @@
                     <span class="linedetail" @click.stop.click="dateTimePick">{{dateSelected}} > </span>
                 </span>
                 <view class="sure">
-                    <i-button type="primary">确认派单</i-button>
+                    <i-button type="primary" @click='paidan'>确认派单</i-button>
                 </view>
             </view>
             <van-popup :show="datepickershow" position="bottom">
@@ -102,7 +102,7 @@
                 <scroll-view scroll-y="true" :style="{ height: '460rpx'}">
                     <i-panel>
                         <i-checkbox-group :current="peoplecurrent" :data-set="peoplecurrent" @change="handleFruitChange">
-                            <i-checkbox v-for=" (item,index) in houxuanren" :position="'right'" :key="index" :value="item.name">
+                            <i-checkbox v-for=" (item,index) in houxuanren" :position="'right'" :key="item.id" :data-sid="item.id" :value="item.name">
                             </i-checkbox>
                         </i-checkbox-group>
                     </i-panel>
@@ -192,7 +192,7 @@ export default {
             imgsUrl: [],
             //确认完成
             detail: {
-                state: 0,
+                state: 2,
                 banzu: '一工队',
                 gongzhang: '张三',
                 gzcell: '13858585654',
@@ -216,6 +216,18 @@ export default {
                     taidanhao: 'this is off'
                 },
             },
+            origin: {
+                danhao: 'WX1245151424',
+                time: "2019年7月04日 18:44",
+                name: "张三",
+                phone: "13854587485",
+                type: '水电问题',
+                content: ['度数不转', '水表度数块', '其他问题', '还有问题', '能量不打钩', '旖旎你水电'],
+                imgsUrl: ['http://www.simpleqq.com/index/imgs/tab/tab4.jpg', "https://www.simpleqq.com/index/imgs/imgdemo.jpg"],
+                station: "杭州南站",
+                address: "杭州南站习广场东侧候车厅小隔间大阳台小浴室的拐角的洞洞里",
+                taidanhao: 'this is off'
+            },
             selectIndex: '',
             judgeShow: false,
             reasonShow: false,
@@ -228,32 +240,9 @@ export default {
             dateSelected: "请选择",
             list: ['a', 'b', 'c'],
             result: ['a', 'b'],
-            houxuanren: [{
-                id: 1,
-                name: '香蕉',
-            }, {
-                id: 2,
-                name: '苹果'
-            }, {
-                id: 3,
-                name: '西瓜'
-            }, {
-                id: 4,
-                name: '葡萄1',
-            }, {
-                id: 5,
-                name: '葡萄2',
-            }, {
-                id: 6,
-                name: '葡萄3',
-            }, {
-                id: 7,
-                name: '葡萄4',
-            }, {
-                id: 8,
-                name: '葡萄5',
-            }],
+            houxuanren: [],
             peoplecurrent: [],
+            peoplecurrentindex: [],
             position: 'right',
             animal: 'xx',
             checked: false,
@@ -264,7 +253,9 @@ export default {
             luyinwenzi: "长按添加录音",
             playVoiceBtnShow: false,
             timeinterval: '',
-            time: 0
+            time: 0,
+            oid: '',
+            daochangshijian: '',
         }
     },
     computed: {
@@ -291,8 +282,8 @@ export default {
         },
         preview: function(key) {
             wx.previewImage({
-                current: this.detail.origin.imgsUrl[key], // 当前显示图片的http链接
-                urls: this.detail.origin.imgsUrl // 需要预览的图片http链接列表
+                current: this.origin.imgsUrl[key], // 当前显示图片的http链接
+                urls: this.origin.imgsUrl // 需要预览的图片http链接列表
             })
         },
         jiedan() {
@@ -319,9 +310,12 @@ export default {
             console.log(e.mp.detail);
             this.currentDate = e.mp.detail
             var timeSelected = this.formatDate(e.mp.detail)
-            this.dateSelected = timeSelected
+
+            this.detail.arrivetime = timeSelected;
+                this.dateSelected = timeSelected
             console.log(timeSelected)
             this.datepickershow = !this.datepickershow
+            this.daochangshijian = timeSelected
         },
         cancel: function() {
             console.log("pickerclose");
@@ -333,9 +327,9 @@ export default {
             var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
             var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
             var h = (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours()) + ':';
-            var m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ' ';
+            var m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':';
             var s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
-            return Y + M + D + h + m;
+            return Y + M + D + h + m + s;
         },
         formatter(type, value) {
             if (type === 'year') {
@@ -353,8 +347,29 @@ export default {
             const index = this.peoplecurrent.indexOf(detailvalue);
             index === -1 ? this.peoplecurrent.push(detailvalue) : this.peoplecurrent.splice(index, 1);
             this.peoplecurrent = this.peoplecurrent
-            console.log(e.mp.currentTarget.dataset.set);
-            console.log(this.peoplecurrent);
+            /*     console.log(e.mp.currentTarget.dataset.set);
+                 console.log(this.peoplecurrent);*/
+            console.log(this.peoplecurrent)
+            var strings = this.peoplecurrent;
+
+            this.detail.weixiugong = strings.join(',')
+
+
+
+
+            var peoplecurrentindex = [];
+            for (var i in strings) {
+
+                var indexfind = this.houxuanren.filter((e) => e.name == strings[i])[0];
+                console.log(indexfind);
+                peoplecurrentindex[i] = indexfind.id;
+            }
+
+            this.peoplecurrentindex = peoplecurrentindex
+
+
+
+
         },
         peosltcancel() {
             this.peoplepickershow = !this.peoplepickershow
@@ -579,14 +594,116 @@ export default {
         },
         finishCertain() {
             console.log("确认完成");
-        }
+        },
+        //确认派单
+        paidan() {
+            var _this = this
+            console.log(this.peoplecurrentindex)
+            console.log(this.daochangshijian)
+            if (this.peoplecurrentindex.length < 1) {
+                $Toast({
+                    content: '请选择维修人员',
+                    type: 'warning'
+                });
+            } else if (this.daochangshijian == "") {
+                $Toast({
+                    content: '请选择到场时间',
+                    type: 'warning'
+                });
+            } else {
+                wx.request({
+                    url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_accept_order&oid=' + this.oid + '&uid=' + wx.getStorageSync("UID") + "&repair_uid=" + this.peoplecurrentindex.join(',') + '&assigntime=' + this.daochangshijian,
+
+                    success(res) {
+                        console.log(res.data)
+                        if (res.data.success) {
+                            $Toast({
+                                content: '派单成功',
+                                type: 'success',
+                                duration: 2,
+                            });
+                            _this.detail.state = 1
+                            _this.paidanShow = false
+                        } else {
+                            $Toast({
+                                content: '操作失败',
+                                type: 'warning'
+                            });
+                        }
+
+                    }
+                })
+            }
+
+        },
     },
     created() {},
     onShow: function(options) {
+        var _this = this
 
-        this.detail.state = this.$root.$mp.query.s;
+
+        this.oid = this.$root.$mp.query.oid;
+        console.log(this.oid)
         console.log(this.$root.$mp.appOptions)
-        console.log(this.$root.$mp.query )
+        console.log(this.$root.$mp.query)
+        wx.request({
+            url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_pending_detail&oid=' + this.oid,
+
+            success(res) {
+             
+                var databack = res.data
+
+                var statusText = databack.OrderStatus
+                var statuscode = ''
+                if (statusText == "待处理") {
+                    _this.detail.state = "0"
+                } else if (statusText == "维修中") {
+                    _this.detail.state = "1"
+                } else if (statusText == "已完成") {
+                    _this.detail.state = "2"
+                } else if (statusText == "已中止") {
+                    _this.detail.state = "3"
+                }
+
+
+
+                var json = {
+                    statuscode: statuscode,
+                    danhao: databack.SerialNo,
+                    time: databack.CreateTime,
+                    name: databack.ReportUser,
+                    phone: databack.Mobile,
+                    type: databack.MaintenanceType,
+                    content: databack.MaintenanceContentValue,
+                    imgsUrl: databack.Pictures,
+                    station: databack.Station,
+                    address: databack.DetailLocation,
+                    taidanhao: databack.TaidanNo,
+                }
+                _this.origin = json
+
+            }
+        })
+        wx.request({
+            url: 'https://hd.xmountguan.com/railway/user.aspx?func=get_repairman_list&uid=' + wx.getStorageSync('UID'),
+
+            success(res) {
+                console.log(res.data)
+                var databack = res.data
+
+                _this.houxuanren = []
+
+                for (var i = 0; i < databack.length; i++) {
+
+                    var s = {
+                        id: databack[i].uid,
+                        name: databack[i].username,
+                    }
+                    _this.houxuanren.push(s)
+                }
+
+            }
+        })
     },
 }
 
@@ -1067,7 +1184,8 @@ export default {
     top: -18rpx;
     width: 36rpx;
     height: 36rpx;
-    z-index: 2;
+    z-index:
+        2;
 
 }
 
