@@ -3,12 +3,9 @@
         "pages/indexswiper/main",
         "pages/login/main",
         "pages/detailforworker/main",
-        "pages/detail/main",
-        "pages/report/main",
         "pages/locationSearch/main",
         "pages/changecell2/main",
         "pages/changecell1/main",
-        "pages/index/main",
         "pages/pswreset/main",
         "pages/register/main",
         "pages/logs/main"

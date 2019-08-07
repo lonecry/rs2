@@ -15,6 +15,7 @@
 	"appid": "wx061cb7f94fc9e8db",
 	"projectname": "rs1",
 	"simulatorType": "wechat",
+    "enablePullDownRefresh": true,//开启下拉刷新
 	"simulatorPluginLibVersion": {},
 	"libVersion": "2.7.4",
 	"condition": {
