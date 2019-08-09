@@ -15,7 +15,9 @@
 	"appid": "wx061cb7f94fc9e8db",
 	"projectname": "rs1",
 	"simulatorType": "wechat",
-    "enablePullDownRefresh": true,//开启下拉刷新
+    "enablePullDownRefresh": true,
+    "backgroundColor": "#f0145a",
+    "backgroundTextStyle": "dark",
 	"simulatorPluginLibVersion": {},
 	"libVersion": "2.7.4",
 	"condition": {
