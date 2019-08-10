@@ -1,7 +1,7 @@
 <template>
     <div style = "padding-bottom:150rpx;">
         <div class = "ipts">
-            <span class = "ititle">报修单号</span>
+            <span class = "ititle">报修单号:</span>
             <span class = "ript">{{origin.danhao}}</span>
         </div>
         <div class = "ipts">
@@ -9,35 +9,35 @@
             <span :class = "[{  gray  : detail.state=='0' },{  yellow  : detail.state=='1' },{  green  : detail.state=='2' },{  red  : detail.state=='3' }, 'ript']">{{detail.state==0?"待处理":(detail.state==1?"维修中":(detail.state==2?"已完成":"已中止"))}}</span>
         </div>
         <div v-if = "detail.state==3" class = "ipts">
-            <span class = "ititle">反馈理由</span>
+            <span class = "ititle">反馈理由:</span>
             <span class = "ript riptcontent">{{detail.fktype}}</span>
         </div>
         <div v-if = "detail.state==3" class = "ipts">
-            <span class = "ititle" style = "float: none;">备注</span>
+            <span class = "ititle" style = "float: none;">备注:</span>
             <span class = "  fkbeizhu">{{detail.fkbeizhu }}</span>
         </div>
         <div v-if = "detail.state==1" class = "ipts">
-            <span class = "ititle">维修工</span>
+            <span class = "ititle">维修工:</span>
             <span class = "ript">{{detail.weixiugong}}</span>
         </div>
         <div v-if = "detail.state==1" class = "ipts">
-            <span class = "ititle">到场时间</span>
+            <span class = "ititle">到场时间:</span>
             <span class = "ript">{{detail.arrivetime}}</span>
         </div>
         <div class = "ipts">
-            <span class = "ititle">报修人姓名</span>
+            <span class = "ititle">报修人姓名:</span>
             <span class = "ript">{{origin.name}}</span>
         </div>
         <div class = "ipts">
-            <span class = "ititle">手机号</span>
+            <span class = "ititle">手机号:</span>
             <span class = "ript phone" @click = 'makeacall' :data-cell = "origin.phone">{{origin.phone}}</span>
         </div>
         <div class = "ipts">
-            <span class = "ititle">报修类型</span>
+            <span class = "ititle">报修类型:</span>
             <span class = "ript ">{{origin.type}}</span>
         </div>
         <div class = "ipts">
-            <span class = "ititle">报修内容</span>
+            <span class = "ititle">报修内容:</span>
             <span class = "ript riptcontent">{{origin.content}}</span>
         </div>
         <div class = "ipts">
@@ -48,41 +48,67 @@
                 </div>
             </div>
         </div>
-        <div class = "ipts" v-if = "detail.state!=='0'">
+        <!--<div class = "ipts" v-if = "detail.state!=='0'">
             <span class = "ititle imgs ">维修图片:</span>
             <div style = "margin-left:45rpx;width:auto;">
                 <div class = "imgbox" v-for = "(item,index) in MaintenancePics" :key = "index">
                     <img :src = "item" :mode = "'widthFix'" @click = 'preview2(index)' class = "slt" alt = "缩略图">
                 </div>
             </div>
-        </div>
+        </div>-->
         <div class = "ipts">
-            <span class = "ititle">车站</span>
+            <span class = "ititle">车站：</span>
             <div class = "loca">
                 <i-icon style = "position:relative;top:-4rpx;" type = "coordinates_fill" size = "26" color = "#2d8cf0" class = "usericon"/>
                 <span class = "spans  ">{{origin.station}}</span>
             </div>
         </div>
         <div class = "ipts">
-            <span class = "ititle" style = "float: none;">详细位置描述</span>
+            <span class = "ititle" style = "float: none;">详细位置：</span>
             <span class = "address addressworker">{{origin.address }}</span>
         </div>
-        <!--<div class = "ipts" style="padding: 10rpx;border: 1rpx dashed #2d8cf0;box-sizing: border-box;width: 92%;">
-           <div class="weixiug"></div>
-           <div class="weixiug"></div>
-        </div>-->
+        <div class = "ipts" v-if = "detail.state!=='0'" style = "padding: 10rpx;border: 1rpx dashed  rgba(255,209,119,0.96);box-sizing: border-box;width: 92%;">
+            <span>维修详情：</span>
+            <div class = "weixiug" v-for = "(item,index) in  Repairs" :key = "index">
+                <div class = "lists">
+                    <span class = "listsleft">维修工：</span>
+                    <span class = "listsright">{{item.UserName}}</span>
+                </div>
+                <div class = "lists">
+                    <span class = "listsleft">电话：</span>
+                    <span class = "listsright phone" @click = 'makeacall' :data-cell = "item.Mobile">{{item.Mobile}}</span>
+                </div>
+                <div class = "lists">
+                    <span class = "listsleft">状态：</span>
+                    <span class = "listsright">{{item.RepairStatus}}</span>
+                </div>
+                <div class = "lsits" v-if = "workimgshow(item.RepairPics)">
+                    <span class = "ititle imgs ">现场图片:</span>
+                    <div style = "margin-left:45rpx;width:auto;">
+                        <div class = "imgbox" v-for = "(listitem,listindex) in item.RepairPics" :key = "listindex">
+                            <img :src = "listitem" :mode = "'widthFix'" @click = 'workeRpreview(listindex,item.RepairPics)' class = "slt" alt = "缩略图">
+                        </div>
+                    </div>
+                </div>
+                <i-button type = "info" v-if = "item.RepairStatus =='维修中'&&UID==item.UID&&detail.state =='1'" :data-uid = "item.UID" size = "small" style = "display: block;margin-top: 60rpx" @click = "repairend">
+                    确认维修结束
+                </i-button>
+            </div>
+
+
+        </div>
 
         <!--   <div class="ipts">
                <span class="ititle">台单号：</span>
                <span class="ript">{{origin.taidanhao}}</span>
            </div>
           -->
-        <i-row :class = "'buttons'" v-if = "peopletype=='gz'">
+        <i-row :class = "'buttons'" v-if = "peopletype=='gz'&&role==2">
             <i-col v-if = "detail.state=='0'" :span = "16">
                 <i-button type = "primary" @click = "jiedan">接 单</i-button>
             </i-col>
             <i-col v-else-if = "detail.state=='1'" :span = "16">
-                <i-button type = "primary" @click = "finish">确认完成</i-button>
+                <i-button type = "success" @click = "finish">确认完成</i-button>
             </i-col>
             <i-col :span = "8" v-if = "detail.state=='0'||detail.state=='1' ">
                 <i-button type = "warning" @click = "fankui">反 馈</i-button>
@@ -160,8 +186,16 @@
         <view class = "finish" v-if = "finishShow">
             <view class = "finishcard">
                 <img src = "/static/images/close.png" class = "cardclose" @click = "finishToggle">
-                <span class = "cardtitle">确认维修完成</span>
-                <span class = "finishtips">*维修完成，请上传现场反馈图片。</span>
+                <span class = "finishend">维修结束</span>
+                <div class = "infos">
+                    <span class = "linetitel">维修状态：</span>
+                    <view class = "section" style = "text-align: right">
+                        <picker @change = "bindPickerChange2" :value = "index3" :range = "finishState">
+                            {{finishState[index3]}} >
+                        </picker>
+                    </view>
+                </div>
+                <span class = "finishtips">*如果维修完成，请上传现场反馈图片。</span>
                 <div class = "uoloadimgs" :data-upid = "index" @click = "uploadImg" v-for = "(item,index) in upload" :key = "index">
                     <span>+</span>
                     <span class = "tips">上传图片</span>
@@ -170,11 +204,16 @@
                     </div>
                     <img v-if = "item.show" :data-upid = "index" src = "/static/images/delete.png" @click.stop = 'deleteImg' class = "delete">
                 </div>
-                <textarea type = "text" placeholder = "备注信息" :value = "beizhu" v-model = "beizhu" style = "border: 0.5px solid gray;display: block;width: 97%;height: 50px;margin-bottom: 17px;padding: 5rpx;"></textarea>
-                <i-button type = "primary" @click.stop = "finishCertain">确认完成</i-button>
+                <textarea type = "text" placeholder = "备注信息" :value = "beizhu" v-model = "beizhu" style = "border: 0.5px solid #cacaca;display: block;width: 92%;height: 34px;margin-bottom: 17px;padding: 2px;margin: 0 auto;"></textarea>
+                <i-button type = "success" @click.stop = "workerEndcertain" size = "small" style = "position: relative;left: 0;top: 30rpx;">
+                    确认结束
+                </i-button>
             </view>
         </view>
         <i-toast id = "toast"/>
+        <i-modal :visible="dingdanfinish" @ok="dingdanfinishShow" @cancel="dingdanfinishHide">
+            <view>确认完成订单吗？</view>
+        </i-modal>
     </div>
 </template>
 <script>
@@ -183,11 +222,16 @@
     export default {
         data(){
             return {
+                dingdanfinish:false,
+                UID         : '',
+                OID         : '',//訂單ID
+                workerUID   : '',
+                role        : 2, //维修工是1 工长是2
                 index       : 0,
                 index2      : 0,
+                index3      : 0,
                 array       : ['修补了','不能修','不可归我管','其他'],
-                array2      : ['修补了detail','不能修detail','不可归我管detail','其他detail'],
-                // 时间选择器
+                array2      : ['修补了detail','不能修detail','不可归我管detail','其他detail'],    // 时间选择器
                 minHour     : 10,
                 maxHour     : 20,
                 minDate     : new Date().getTime(),
@@ -273,7 +317,36 @@
                 oid                : '',
                 daochangshijian    : '',
                 //现场图片
-                MaintenancePics    : []
+                MaintenancePics    : [],
+                finishState        : ['已完成','不能完成'],
+                Repairs            : [
+                    {
+                        "RPID"          : 38,
+                        "UID"           : 1,
+                        "OID"           : 35,
+                        "UserName"      : "测试维修工1",
+                        "Mobile"        : "13111111111",
+                        "RepairStatus"  : "维修中",
+                        "AssignTime"    : "2019/8/8 15:45:00",
+                        "AcceptTime"    : "",
+                        "RepairContent" : "",
+                        "RepairPics"    : [""],
+                        "FinishTime"    : ""
+                    },
+                    {
+                        "RPID"          : 39,
+                        "UID"           : 2,
+                        "OID"           : 35,
+                        "UserName"      : "测试维修工2",
+                        "Mobile"        : "13222222222",
+                        "RepairStatus"  : "维修中",
+                        "AssignTime"    : "2019/8/8 15:45:00",
+                        "AcceptTime"    : "",
+                        "RepairContent" : "",
+                        "RepairPics"    : [""],
+                        "FinishTime"    : ""
+                    }
+                ],
 
             }
         },
@@ -288,9 +361,25 @@
                 } else {
                     return "请选择 "
                 }
-            }
+            },
+
         },
         methods  : {
+            dingdanfinishShow(){
+                console.log('完成关闭订单，并且更新订单')
+                this.finishCertain()
+
+            },
+            dingdanfinishHide(){
+                this.dingdanfinish=false
+            },
+            workimgshow       : function(data){
+                for(var i = 0 ; i < data.length ; i++){
+                    if(data[i] !== ""){
+                        return true
+                    }
+                }
+            },
             makeacall(e){
                 let wx = mpvue
                 let number = e.mp.currentTarget.dataset.cell
@@ -311,6 +400,12 @@
                     urls    : this.MaintenancePics // 需要预览的图片http链接列表
                 })
             },
+            workeRpreview(key,data){
+                wx.previewImage({
+                    current : data[key], // 当前显示图片的http链接
+                    urls    : data // 需要预览的图片http链接列表
+                })
+            },
             jiedan(){
                 this.paidanShow = true
                 console.log("jiedan");
@@ -319,9 +414,17 @@
                 console.log("fankui");
                 this.fankuiShow = true
             },
+            repairend(e){
+                console.log(e);
+                console.log("repairend");
+                this.finishShow = true;
+                this.workerUID = e.mp.currentTarget.dataset.uid
+            },
             finish(){
                 console.log("finsihed");
-                this.finishShow = true
+                // this.finishShow = true
+                this.dingdanfinish=true
+
             },
             selectPeople      : function(){
                 console.log("选择人员")
@@ -403,9 +506,10 @@
                 console.log('picker发送选择改变，携带值为',e.mp.detail.value)
                 this.index = e.mp.detail.value
             },
-            bindPickerChange2(e){
+            bindPickerChange2 : function(e){
                 console.log('picker发送选择改变，携带值为',e.mp.detail.value)
-                this.index2 = e.mp.detail.value
+
+                this.index3 = e.mp.detail.value
             },
             play              : function(){
                 const innerAudioContext = wx.createInnerAudioContext()
@@ -517,41 +621,7 @@
                 _this.imgsUrl[indexOfLoad] = ''
                 _this.imgsId[indexOfLoad] = ''
             },
-            /* uploadImg(e){
-                 var _this = this
-                 var indexOfLoad = e.mp.currentTarget.dataset.upid
-                 let wx = mpvue
-                 console.log("uploadImg")
-                 let i = 0; // 多图上传时使用到的index
-                 let that = this;
-                 let max = that.maxImg; //最大选择数
-                 let upLength; //图片数组长度
-                 let imgFilePaths; //图片的本地临时文件路径列表
-                 wx.chooseImage({
-                     count      : max || 1, //一次最多可以选择的图片张数
-                     sizeType   : ['original','compressed'], // 可以指定是原图还是压缩图，默认二者都有
-                     sourceType : ['album','camera'], // 可以指定来源是相册还是相机，默认二者都有
-                     success    : function(res){
-                         // tempFilePath可以作为img标签的src属性显示图片
-                         const tempFilePaths = res.tempFilePaths
-                         // console.log(tempFilePaths);
-                         _this.imgsUrl[indexOfLoad] = tempFilePaths[0]
-                         _this.upload[indexOfLoad].imgurl = tempFilePaths
-                         _this.upload[indexOfLoad].show = true
-                         /!**
-                          * 上传完成后把文件上传到服务器
-                          *!/
-                         _this.fileUpload(tempFilePaths)
 
-                     },
-                     fail       : function(){
-                         console.log('fail');
-                     },
-                     complete   : function(){
-                         console.log('commplete');
-                     }
-                 })
-             },*/
             uploadImg(e){
                 var _this = this
                 var indexOfLoad = e.mp.currentTarget.dataset.upid
@@ -593,7 +663,7 @@
                     }
                 })
             },
-            fileUpload        : function(tempFilePaths,index){
+            fileUpload : function(tempFilePaths,index){
                 console.log("待上传 ：" + tempFilePaths);
                 var wx = mpvue
                 var that = this;
@@ -664,6 +734,7 @@
                             });
                             _this.detail.state = 2
                             _this.finishShow = false;
+                            _this.dingdanfinish = false;
                             _this.refresh()
                             wx.setStorageSync('stateChange','2');
                             _this.refresh()
@@ -676,6 +747,56 @@
                         }
                     }
                 })
+            },
+            workerEndcertain(){
+
+                var _this = this;
+                console.log("确认完成");
+                var flg1 = this.imgsId[0]
+                var flg2 = this.imgsId[1]
+                var imgsidforload = ''
+                if(flg1 && flg2){
+                    imgsidforload = this.imgsId.join(',')
+                } else if(flg1){
+                    imgsidforload = this.imgsId[0]
+                } else if(flg2){
+                    imgsidforload = this.imgsId[1]
+                }
+                if(imgsidforload!==""&&_this.beizhu!==""){
+                    console.log(_this.beizhu);
+                    console.log(imgsidforload);
+                    /*  wx.request({
+                          url : 'https://hd.xmountguan.com/railway/order.aspx?func=update_order&oid=' + _this.OID + '&uid=' + _this.workerUID + "&repair_status=" + (_this.index3 + 2) + '&repair_pics=' + imgsidforload + '&repair_content=' + _this.beizhu,
+                          success(res){
+                              console.log(res.data)
+                              _this.finishShow = false;
+                              if(res.data.success){
+                                  $Toast({
+                                      content  : '操作成功',
+                                      type     : 'success',
+                                      duration : 2,
+                                  });
+
+
+
+                              } else {
+                                  $Toast({
+                                      content : '操作失败',
+                                      type    : 'warning'
+                                  });
+
+                              }
+                          }
+                      })*/
+                }else {
+                    console.log("确认完成");
+                    $Toast({
+                        content : '请完善信息',
+                        type    : 'warning'
+                    });
+                }
+
+
             },
             //确认派单
             paidan(){
@@ -786,6 +907,8 @@
         onShow   : function(options){
             var _this = this
             this.oid = this.$root.$mp.query.oid;
+            this.UID = wx.getStorageSync("UID")
+            this.OID = _this.oid
             console.log(this.oid)
             console.log(this.$root.$mp.appOptions)
             console.log(this.$root.$mp.query)
@@ -817,8 +940,10 @@
                         address    : databack.DetailLocation,
                         taidanhao  : databack.TaidanNo,
                     }
-                    _this.origin = json
-                    _this.MaintenancePics = databack.MaintenancePics
+                    _this.origin = json;
+                    _this.MaintenancePics = databack.MaintenancePics;
+                    _this.Repairs = databack.Repairs;
+                    console.log(_this.Repairs);
                 }
             })
             //维修工集合
@@ -1300,11 +1425,65 @@
 
     .weixiug {
         width: 656rpx;
-        height: 300rpx;
+        /*min-height: 300rpx;*/
         display: block;
         margin: 0 auto;
-        background: #1c2438;
-        border: 1rpx solid white;
+        background: rgba(255, 209, 119, 0.13);
+        border: 1rpx solid rgba(76, 115, 137, 0.29);
         margin-bottom: 10rpx;
+        border-radius: 12rpx;
+        overflow: hidden;
+
+    }
+
+    .lists {
+        width: 100%;
+        height: 60rpx;
+        line-height: 60rpx;
+        /*background: #deeaff;*/
+        box-sizing: border-box;
+        padding: 0 10rpx;
+        position: relative;
+    }
+
+    .listsleft {
+        display: block;
+        width: 30%;
+        height: 100%;
+        float: left;
+    }
+
+    .listsright {
+        float: left;
+        display: block;
+        width: 70%;
+        height: 100%;
+    }
+
+    .finishend {
+        display: block;
+        width: 80%;
+        margin-top: 30rpx;
+    }
+
+    .infos {
+        display: block;
+        width: 80%;
+        margin-top: 30rpx;
+        margin-bottom: 30rpx;
+    }
+
+    .finishend {
+        display: block;
+        width: 80%;
+        margin-top: 30rpx;
+        text-align: center;
+        margin: 0 auto;
+        margin-top: 30rpx;
+    }
+
+    .uoloadimgs {
+        margin-top: 25rpx;
+        margin-bottom: 33rpx;
     }
 </style>
