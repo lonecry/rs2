@@ -67,7 +67,7 @@
             <span class = "ititle" style = "float: none;">详细位置：</span>
             <span class = "address addressworker">{{origin.address }}</span>
         </div>
-        <div class = "ipts" v-if = "detail.state!=='0'" style = "padding: 10rpx;border: 1rpx dashed  rgba(255,209,119,0.96);box-sizing: border-box;width: 92%;">
+        <div class = "ipts" v-if = "detail.state!=='0'" style = "padding: 10rpx;border: 2rpx dashed  rgba(255,209,119,0.96);box-sizing: border-box;width: 92%;">
             <span>维修详情：</span>
             <div class = "weixiug" v-for = "(item,index) in  Repairs" :key = "index">
                 <div class = "lists">
@@ -765,7 +765,7 @@
                 if(imgsidforload!==""&&_this.beizhu!==""){
                     console.log(_this.beizhu);
                     console.log(imgsidforload);
-                    /*  wx.request({
+                      wx.request({
                           url : 'https://hd.xmountguan.com/railway/order.aspx?func=update_order&oid=' + _this.OID + '&uid=' + _this.workerUID + "&repair_status=" + (_this.index3 + 2) + '&repair_pics=' + imgsidforload + '&repair_content=' + _this.beizhu,
                           success(res){
                               console.log(res.data)
@@ -787,7 +787,7 @@
 
                               }
                           }
-                      })*/
+                      })
                 }else {
                     console.log("确认完成");
                     $Toast({
@@ -965,6 +965,9 @@
 
 
         },
+        mounted(){
+            this.role = wx.getStorageSync('Role');
+        }
     }
 </script>
 <style>
