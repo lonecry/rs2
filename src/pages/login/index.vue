@@ -25,7 +25,7 @@
     export default {
         data(){
             return {
-                cell : '13888888888',
+                cell : '13111111111',
                 psw  : '12345678'
             }
         },
@@ -51,7 +51,7 @@
                 console.log(this.cell)
                 var wx = mpvue;
                 wx.request({
-                    url : 'https://hd.xmountguan.com/railway/user.aspx?func=login&mobile=' + this.cell + '&pwd=' + this.psw + '&role=2', //仅为示例，并非真实的接口地址
+                    url : 'https://hd.xmountguan.com/railway/user.aspx?func=login&mobile=' + this.cell + '&pwd=' + this.psw + '&role=1', //仅为示例，并非真实的接口地址
                     success(res){
                         console.log(res.data)
                         wx.setStorageSync("UID",res.data.UID);

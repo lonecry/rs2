@@ -67,7 +67,7 @@
             <span class = "ititle" style = "float: none;">详细位置：</span>
             <span class = "address addressworker">{{origin.address }}</span>
         </div>
-        <div class = "ipts" v-if = "detail.state!=='0'" style = "padding: 10rpx;border: 2rpx dashed  rgba(255,209,119,0.96);box-sizing: border-box;width: 92%;">
+        <div class = "ipts" v-if = "detail.state!=='0'&&detail.state!=='4'" style = "padding: 10rpx;border: 2rpx dashed  rgba(255,209,119,0.96);box-sizing: border-box;width: 92%;">
             <span>维修详情：</span>
             <div class = "weixiug" v-for = "(item,index) in  Repairs" :key = "index">
                 <div class = "lists">
@@ -82,7 +82,7 @@
                     <span class = "listsleft">状态：</span>
                     <span class = "listsright">{{item.RepairStatus}}</span>
                 </div>
-                <div class = "lsits" v-if = "workimgshow(item.RepairPics)">
+                <div class = "lsits" v-if = "!workimgshow(index)">
                     <span class = "ititle imgs ">现场图片:</span>
                     <div style = "margin-left:45rpx;width:auto;">
                         <div class = "imgbox" v-for = "(listitem,listindex) in item.RepairPics" :key = "listindex">
@@ -90,14 +90,13 @@
                         </div>
                     </div>
                 </div>
-                <i-button type = "info" v-if = "item.RepairStatus =='维修中'&&UID==item.UID&&detail.state =='1'" :data-uid = "item.UID" size = "small" style = "display: block;margin-top: 60rpx" @click = "repairend">
+                <i-button type = "info" v-if = "item.RepairStatus =='维修中'&&UID==item.UID&&detail.state =='1'"
+                          :data-index = "index" :data-uid = "item.UID" size = "small" style = "display: block;margin-top: 60rpx" @click =
+                              "repairend">
                     确认维修结束
                 </i-button>
             </div>
-
-
         </div>
-
         <!--   <div class="ipts">
                <span class="ititle">台单号：</span>
                <span class="ript">{{origin.taidanhao}}</span>
@@ -157,29 +156,29 @@
                     <view class = "reasons">
                         <picker @change = "bindPickerChange" :value = "index" :range = "array">
                             <view class = "picker">
-                                {{array[index]?array[index]+'√':'请选择理由'}}
+                                {{array[index]?array[index] :'请选择理由'}}
                             </view>
                         </picker>
-                        <picker @change = "bindPickerChange2" :value = "index2" :range = "array2">
-                            <view class = "picker2">
-                                {{array2[index2]?array2[index2]:'请选择理由'}}
-                            </view>
-                        </picker>
+                        <!--<picker @change = "bindPickerChange2" :value = "index2" :range = "array2">-->
+                        <!--<view class = "picker2">-->
+                        <!--{{array2[index2]?array2[index2]:'请选择理由'}}-->
+                        <!--</view>-->
+                        <!--</picker>-->
                     </view>
                 </view>
                 <span class = "fklytxt">备注</span>
                 <textarea v-if = "fankuiShow" class = "fklyDesc" @touchmove.prevent = "" v-model = "fklyDesc" type = "textarea" maxlength = "200" autofocus placeholder = "  输入备注内容（200字内）"></textarea>
-                <span class = "fklytxt">录音汇报</span>
-                <button class = "fkbtns" @longpress = "start" @touchmove = "handleTouchMove" @touchend = "stop">
-                    {{luyinwenzi}}
-                </button>
-                <button v-if = "playVoiceBtnShow" class = "fkbtns voiceplay" @tap = 'play'>
-                    <img src = "/static/images/voice.png" class = "voice">
-                    <span> {{time}}秒</span>
-                </button>
-                <img v-if = "playVoiceBtnShow" src = "/static/images/shanchu.png" class = "deleteVoice" @click.stop = "deleteVoice">
+                <!-- <span class = "fklytxt">录音汇报</span>
+                 <button class = "fkbtns" @longpress = "start" @touchmove = "handleTouchMove" @touchend = "stop">
+                     {{luyinwenzi}}
+                 </button>
+                 <button v-if = "playVoiceBtnShow" class = "fkbtns voiceplay" @tap = 'play'>
+                     <img src = "/static/images/voice.png" class = "voice">
+                     <span> {{time}}秒</span>
+                 </button>
+                 <img v-if = "playVoiceBtnShow" src = "/static/images/shanchu.png" class = "deleteVoice" @click.stop = "deleteVoice">-->
                 <view class = "fkbtn">
-                    <i-button type = "primary" @click.stop = "fankui">确认反馈</i-button>
+                    <i-button type = "primary" @click.stop = "quedingfankui">确认反馈</i-button>
                 </view>
             </view>
         </view>
@@ -211,7 +210,7 @@
             </view>
         </view>
         <i-toast id = "toast"/>
-        <i-modal :visible="dingdanfinish" @ok="dingdanfinishShow" @cancel="dingdanfinishHide">
+        <i-modal :visible = "dingdanfinish" @ok = "dingdanfinishShow" @cancel = "dingdanfinishHide">
             <view>确认完成订单吗？</view>
         </i-modal>
     </div>
@@ -222,189 +221,203 @@
     export default {
         data(){
             return {
-                dingdanfinish:false,
-                UID         : '',
-                OID         : '',//訂單ID
-                workerUID   : '',
-                role        : 2, //维修工是1 工长是2
-                index       : 0,
-                index2      : 0,
-                index3      : 0,
-                array       : ['修补了','不能修','不可归我管','其他'],
-                array2      : ['修补了detail','不能修detail','不可归我管detail','其他detail'],    // 时间选择器
-                minHour     : 10,
-                maxHour     : 20,
-                minDate     : new Date().getTime(),
-                maxDate     : new Date(2019,10,1).getTime(),
-                currentDate : new Date().getTime(),
+                dingdanfinish: false,
+                UID: '',
+                OID: '',//訂單ID
+                workerUID: '',
+                role: 2, //维修工是1 工长是2
+                index: 0,
+                index2: 0,
+                index3: 0,
+                array: ['修不了', '需要协助'], //“修不了”“需要协助”
+                array2: ['修补了detail', '不能修detail', '不可归我管detail', '其他detail'],    // 时间选择器
+                minHour: 10,
+                maxHour: 20,
+                minDate: new Date().getTime(),
+                maxDate: new Date(2019, 10, 1).getTime(),
+                currentDate: new Date().getTime(),
                 // 时间选择器
                 //身份选择
-                peopletype  : 'gz', // wxg  gz  维修工 和 工区工长
+                peopletype: 'gz', // wxg  gz  维修工 和 工区工长
                 //身份选择
                 //确认完成
-                upload      : [
-                    {imgurl : '',show : false},
-                    {imgurl : '',show : false},
+                upload: [
+                    {imgurl: '', show: false},
+                    {imgurl: '', show: false},
                 ],
-
                 //确认完成
-                imgsUrl            : [],
-                imgsId             : [],
-                beizhu             : '',
-                detail             : {
-                    state      : 2,
-                    banzu      : '一工队',
-                    gongzhang  : '张三',
-                    gzcell     : '13858585654',
-                    weixiugong : '李四',
-                    wxgcell    : '13865656545',
-                    arrivetime : '2019-7-11 08:00',
-                    jubao      : '10086',
-                    location   : '',
-                    fktype     : '水表坏',
-                    fkbeizhu   : "水表坏需要更换，没办法维修。",
-                    origin     : {
-                        danhao    : 'WX1245151424',
-                        time      : "2019年7月04日 18:44",
-                        name      : "张三",
-                        phone     : "13854587485",
-                        type      : '水电问题',
-                        content   : ['度数不转','水表度数块','其他问题','还有问题','能量不打钩','旖旎你水电'],
-                        imgsUrl   : ['http://www.simpleqq.com/index/imgs/tab/tab4.jpg',"https://www.simpleqq.com/index/imgs/imgdemo.jpg"],
-                        station   : "杭州南站",
-                        address   : "杭州南站习广场东侧候车厅小隔间大阳台小浴室的拐角的洞洞里",
-                        taidanhao : 'this is off'
+                imgsUrl: [],
+                imgsId: [],
+                beizhu: '',
+                detail: {
+                    state: 2,
+                    banzu: '一工队',
+                    gongzhang: '张三',
+                    gzcell: '13858585654',
+                    weixiugong: '李四',
+                    wxgcell: '13865656545',
+                    arrivetime: '2019-7-11 08:00',
+                    jubao: '10086',
+                    location: '',
+                    fktype: '水表坏',
+                    fkbeizhu: "水表坏需要更换，没办法维修。",
+                    origin: {
+                        danhao: 'WX1245151424',
+                        time: "2019年7月04日 18:44",
+                        name: "张三",
+                        phone: "13854587485",
+                        type: '水电问题',
+                        content: ['度数不转', '水表度数块', '其他问题', '还有问题', '能量不打钩', '旖旎你水电'],
+                        imgsUrl: ['http://www.simpleqq.com/index/imgs/tab/tab4.jpg', "https://www.simpleqq.com/index/imgs/imgdemo.jpg"],
+                        station: "杭州南站",
+                        address: "杭州南站习广场东侧候车厅小隔间大阳台小浴室的拐角的洞洞里",
+                        taidanhao: 'this is off'
                     },
                 },
-                origin             : {
-                    danhao    : 'WX1245151424',
-                    time      : "2019年7月04日 18:44",
-                    name      : "张三",
-                    phone     : "13854587485",
-                    type      : '水电问题',
-                    content   : ['度数不转','水表度数块','其他问题','还有问题','能量不打钩','旖旎你水电'],
-                    imgsUrl   : ['http://www.simpleqq.com/index/imgs/tab/tab4.jpg',"https://www.simpleqq.com/index/imgs/imgdemo.jpg"],
-                    station   : "杭州南站",
-                    address   : "杭州南站习广场东侧候车厅小隔间大阳台小浴室的拐角的洞洞里",
-                    taidanhao : 'this is off'
+                origin: {
+                    danhao: 'WX1245151424',
+                    time: "2019年7月04日 18:44",
+                    name: "张三",
+                    phone: "13854587485",
+                    type: '水电问题',
+                    content: ['度数不转', '水表度数块', '其他问题', '还有问题', '能量不打钩', '旖旎你水电'],
+                    imgsUrl: ['http://www.simpleqq.com/index/imgs/tab/tab4.jpg', "https://www.simpleqq.com/index/imgs/imgdemo.jpg"],
+                    station: "杭州南站",
+                    address: "杭州南站习广场东侧候车厅小隔间大阳台小浴室的拐角的洞洞里",
+                    taidanhao: 'this is off'
                 },
-                selectIndex        : '',
-                judgeShow          : false,
-                reasonShow         : false,
-                badReason          : "",
-                paidanShow         : false,
-                fankuiShow         : false,
-                finishShow         : false,
-                datepickershow     : false,
-                peoplepickershow   : false,
-                dateSelected       : "请选择",
-                list               : ['a','b','c'],
-                result             : ['a','b'],
-                houxuanren         : [],
-                peoplecurrent      : [],
-                peoplecurrentindex : [],
-                position           : 'right',
-                animal             : 'xx',
-                checked            : false,
-                disabled           : false,
-                fklyDesc           : "",
-                sendLock           : false,
-                startY             : '',
-                luyinwenzi         : "长按添加录音",
-                playVoiceBtnShow   : false,
-                timeinterval       : '',
-                time               : 0,
-                oid                : '',
-                daochangshijian    : '',
+                selectIndex: '',
+                judgeShow: false,
+                reasonShow: false,
+                badReason: "",
+                paidanShow: false,
+                fankuiShow: false,
+                finishShow: false,
+                datepickershow: false,
+                peoplepickershow: false,
+                dateSelected: "请选择",
+                list: ['a', 'b', 'c'],
+                result: ['a', 'b'],
+                houxuanren: [],
+                peoplecurrent: [],
+                peoplecurrentindex: [],
+                position: 'right',
+                animal: 'xx',
+                checked: false,
+                disabled: false,
+                fklyDesc: "",
+                sendLock: false,
+                startY: '',
+                luyinwenzi: "长按添加录音",
+                playVoiceBtnShow: false,
+                timeinterval: '',
+                time: 0,
+                oid: '',
+                daochangshijian: '',
                 //现场图片
-                MaintenancePics    : [],
-                finishState        : ['已完成','不能完成'],
-                Repairs            : [
+                MaintenancePics: [],
+                finishState: ['已完成', '不能完成'],
+                repairIndex: 0,
+                Repairs: [
                     {
-                        "RPID"          : 38,
-                        "UID"           : 1,
-                        "OID"           : 35,
-                        "UserName"      : "测试维修工1",
-                        "Mobile"        : "13111111111",
-                        "RepairStatus"  : "维修中",
-                        "AssignTime"    : "2019/8/8 15:45:00",
-                        "AcceptTime"    : "",
-                        "RepairContent" : "",
-                        "RepairPics"    : [""],
-                        "FinishTime"    : ""
+                        "RPID": 38,
+                        "UID": 1,
+                        "OID": 35,
+                        "UserName": "测试维修工1",
+                        "Mobile": "13111111111",
+                        "RepairStatus": "维修中",
+                        "AssignTime": "2019/8/8 15:45:00",
+                        "AcceptTime": "",
+                        "RepairContent": "",
+                        "RepairPics": [""],
+                        "FinishTime": ""
                     },
                     {
-                        "RPID"          : 39,
-                        "UID"           : 2,
-                        "OID"           : 35,
-                        "UserName"      : "测试维修工2",
-                        "Mobile"        : "13222222222",
-                        "RepairStatus"  : "维修中",
-                        "AssignTime"    : "2019/8/8 15:45:00",
-                        "AcceptTime"    : "",
-                        "RepairContent" : "",
-                        "RepairPics"    : [""],
-                        "FinishTime"    : ""
+                        "RPID": 39,
+                        "UID": 2,
+                        "OID": 35,
+                        "UserName": "测试维修工2",
+                        "Mobile": "13222222222",
+                        "RepairStatus": "维修中",
+                        "AssignTime": "2019/8/8 15:45:00",
+                        "AcceptTime": "",
+                        "RepairContent": "",
+                        "RepairPics": [""],
+                        "FinishTime": ""
                     }
                 ],
-
             }
         },
-        computed : {
-            judgement : function(){
+        computed: {
+            judgement: function (){
                 console.log(this.detail.state);
                 return (this.detail.state == 2 || this.detail.state == 3) ? true : false
             },
-            peoples   : function(){
-                if(this.peoplecurrent.length > 0){
+            peoples: function (){
+                if (this.peoplecurrent.length > 0) {
                     return this.peoplecurrent
                 } else {
                     return "请选择 "
                 }
             },
-
         },
-        methods  : {
+        methods: {
             dingdanfinishShow(){
                 console.log('完成关闭订单，并且更新订单')
                 this.finishCertain()
-
             },
             dingdanfinishHide(){
-                this.dingdanfinish=false
+                this.dingdanfinish = false
             },
-            workimgshow       : function(data){
-                for(var i = 0 ; i < data.length ; i++){
-                    if(data[i] !== ""){
-                        return true
-                    }
+            workimgshow: function (index){
+                var data = this.Repairs[index]
+                console.log("datas" + index)
+                if (data.RepairPics[0] == "" && data.RepairPics[1] == "") {
+                    return false
+                } else {
+                    return true
                 }
+                /*for (var i = 0; i < data.RepairPics.length; i++) {
+                 console.log("查看有图？" + data.RepairPics[i]);
+
+                 if (data.RepairPics[i] !== "") { //说明有图
+                 this.Repairs[index].workimgsfade = true
+                 return true
+                 console.log('有图')
+                 break;
+                 } else { //说明咩有图
+                 this.Repairs[index].workimgsfade = false
+                 return false;
+                 console.log('无图')
+                 break;
+                 }
+                 }*/
             },
             makeacall(e){
                 let wx = mpvue
                 let number = e.mp.currentTarget.dataset.cell
                 console.log(number)
                 wx.makePhoneCall({
-                    phoneNumber : number //仅为示例，并非真实的电话号码
-                })
+                                     phoneNumber: number //仅为示例，并非真实的电话号码
+                                 })
             },
-            preview           : function(key){
+            preview: function (key){
                 wx.previewImage({
-                    current : this.origin.imgsUrl[key], // 当前显示图片的http链接
-                    urls    : this.origin.imgsUrl // 需要预览的图片http链接列表
-                })
+                                    current: this.origin.imgsUrl[key], // 当前显示图片的http链接
+                                    urls: this.origin.imgsUrl // 需要预览的图片http链接列表
+                                })
             },
-            preview2          : function(key){
+            preview2: function (key){
                 wx.previewImage({
-                    current : this.MaintenancePics[key], // 当前显示图片的http链接
-                    urls    : this.MaintenancePics // 需要预览的图片http链接列表
-                })
+                                    current: this.MaintenancePics[key], // 当前显示图片的http链接
+                                    urls: this.MaintenancePics // 需要预览的图片http链接列表
+                                })
             },
-            workeRpreview(key,data){
+            workeRpreview(key, data){
                 wx.previewImage({
-                    current : data[key], // 当前显示图片的http链接
-                    urls    : data // 需要预览的图片http链接列表
-                })
+                                    current: data[key], // 当前显示图片的http链接
+                                    urls: data // 需要预览的图片http链接列表
+                                })
             },
             jiedan(){
                 this.paidanShow = true
@@ -414,23 +427,55 @@
                 console.log("fankui");
                 this.fankuiShow = true
             },
+            quedingfankui(){
+                console.log("fankui");
+                // this.fankuiShow = true
+                var _this=this
+                var wx=mpvue
+
+                wx.request({
+                               url: 'https://hd.xmountguan.com/railway/order.aspx?func=update_order&oid=' + this.oid+'&order_status=4'+'&uid='+wx.getStorageSync("UID")+"&maintenancePics="+' '+'&process='+_this.fklyDesc,
+                               success(res){
+                                   console.log(res);
+                                   if (res.data.success='success'){
+                                       _this.fankuiShow = false
+                                   }
+                                   _this.detail.state = 4
+
+                                   wx.setStorageSync('stateChange', '4');
+                                   _this.refresh()
+
+
+                                   _this.detail.fkbeizhu=_this.fklyDesc
+                                   _this.detail.fktype=_this.array[_this.index]
+
+
+
+                               },
+                                fail(w){
+                                    console.log(w);
+                                }
+                           })
+
+
+            },
             repairend(e){
                 console.log(e);
                 console.log("repairend");
                 this.finishShow = true;
                 this.workerUID = e.mp.currentTarget.dataset.uid
+                this.repairIndex = e.mp.currentTarget.dataset.index
             },
             finish(){
                 console.log("finsihed");
                 // this.finishShow = true
-                this.dingdanfinish=true
-
+                this.dingdanfinish = true
             },
-            selectPeople      : function(){
+            selectPeople: function (){
                 console.log("选择人员")
                 this.peoplepickershow = true
             },
-            dateTimePick      : function(){
+            dateTimePick: function (){
                 console.log("dateTimePick")
                 this.datepickershow = true
             },
@@ -444,11 +489,11 @@
                 this.datepickershow = !this.datepickershow
                 this.daochangshijian = timeSelected
             },
-            cancel            : function(){
+            cancel: function (){
                 console.log("pickerclose");
                 this.datepickershow = !this.datepickershow
             },
-            formatDate        : function(timestamp){
+            formatDate: function (timestamp){
                 var date = new Date(timestamp);
                 var Y = date.getFullYear() + '-';
                 var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
@@ -458,10 +503,10 @@
                 var s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
                 return Y + M + D + h + m + s;
             },
-            formatter(type,value){
-                if(type === 'year'){
+            formatter(type, value){
+                if (type === 'year') {
                     return `${value}年`;
-                } else if(type === 'month'){
+                } else if (type === 'month') {
                     return `${value}月`;
                 }
                 return value;
@@ -469,10 +514,10 @@
             onChange(e){
                 console.log(e);
             },
-            handleFruitChange : function(e){
+            handleFruitChange: function (e){
                 var detailvalue = e.mp.detail.value
                 const index = this.peoplecurrent.indexOf(detailvalue);
-                index === -1 ? this.peoplecurrent.push(detailvalue) : this.peoplecurrent.splice(index,1);
+                index === -1 ? this.peoplecurrent.push(detailvalue) : this.peoplecurrent.splice(index, 1);
                 this.peoplecurrent = this.peoplecurrent
                 /*     console.log(e.mp.currentTarget.dataset.set);
                  console.log(this.peoplecurrent);*/
@@ -480,7 +525,7 @@
                 var strings = this.peoplecurrent;
                 this.detail.weixiugong = strings.join(',')
                 var peoplecurrentindex = [];
-                for(var i in strings){
+                for (var i in strings) {
                     var indexfind = this.houxuanren.filter((e) => e.name == strings[i])[0];
                     console.log(indexfind);
                     peoplecurrentindex[i] = indexfind.id;
@@ -503,15 +548,14 @@
                 this.fankuiShow = !this.fankuiShow
             },
             bindPickerChange(e){
-                console.log('picker发送选择改变，携带值为',e.mp.detail.value)
+                console.log('picker发送选择改变，携带值为', e.mp.detail.value)
                 this.index = e.mp.detail.value
             },
-            bindPickerChange2 : function(e){
-                console.log('picker发送选择改变，携带值为',e.mp.detail.value)
-
+            bindPickerChange2: function (e){
+                console.log('picker发送选择改变，携带值为', e.mp.detail.value)
                 this.index3 = e.mp.detail.value
             },
-            play              : function(){
+            play: function (){
                 const innerAudioContext = wx.createInnerAudioContext()
                 //播放声音文件
                 innerAudioContext.autoplay = true
@@ -524,23 +568,23 @@
                     console.log(res.errCode)
                 })
             },
-            start             : function(e){
+            start: function (e){
                 console.log(e.y)
                 this.startY = e.y
                 $Toast({
-                    content  : '录音中，上滑取消',
-                    image    : '/static/images/record.png',
-                    duration : 0,
-                });
+                           content: '录音中，上滑取消',
+                           image: '/static/images/record.png',
+                           duration: 0,
+                       });
                 //开始录音
                 console.log("开始录音")
                 const options = {
-                    duration         : 10000, //指定录音的时长，单位 ms
-                    sampleRate       : 16000, //采样率
-                    numberOfChannels : 1, //录音通道数
-                    encodeBitRate    : 96000, //编码码率
-                    format           : 'mp3', //音频格式，有效值 aac/mp3
-                    frameSize        : 50, //指定帧大小，单位 KB
+                    duration: 10000, //指定录音的时长，单位 ms
+                    sampleRate: 16000, //采样率
+                    numberOfChannels: 1, //录音通道数
+                    encodeBitRate: 96000, //编码码率
+                    format: 'mp3', //音频格式，有效值 aac/mp3
+                    frameSize: 50, //指定帧大小，单位 KB
                 }
                 this.luyinwenzi = "松开 结束"
                 const recorderManager = wx.getRecorderManager()
@@ -554,7 +598,7 @@
                     console.log(res);
                 })
             },
-            stop              : function(){
+            stop: function (){
                 //结束录音
                 console.log("结束录音")
                 $Toast.hide();
@@ -562,16 +606,16 @@
                 recorderManager.stop();
                 recorderManager.onStop((res) =>{
                     console.log(res);
-                    if(res.duration < 1000){
+                    if (res.duration < 1000) {
                         $Toast({
-                            content  : '录音时间太短',
-                            image    : '/static/images/back.png',
-                            duration : 3,
-                        });
+                                   content: '录音时间太短',
+                                   image: '/static/images/back.png',
+                                   duration: 3,
+                               });
                     } else {
                         this.time = Math.ceil(res.duration / 1000)
                         this.tempFilePath = res.tempFilePath;
-                        console.log('停止录音',res.tempFilePath)
+                        console.log('停止录音', res.tempFilePath)
                         const {tempFilePath} = res;
                         this.playVoiceBtnShow = true
                     }
@@ -581,22 +625,22 @@
                 console.log(e.touches[e.touches.length - 1].clientY - this.startY);
                 //touchmove时触发一
                 var moveLenght = e.touches[e.touches.length - 1].clientY - this.startY; //移动距离
-                if(Math.abs(moveLenght) > 400){
+                if (Math.abs(moveLenght) > 400) {
                     $Toast.hide();
                     $Toast({
-                        content  : '松开手指取消',
-                        image    : '/static/images/back.png',
-                        duration : 3,
-                    });
+                               content: '松开手指取消',
+                               image: '/static/images/back.png',
+                               duration: 3,
+                           });
                     this.sendLock = true; //触发了上滑取消发送，上锁
                     this.stop()
-                } else if(Math.abs(moveLenght) > 200){
+                } else if (Math.abs(moveLenght) > 200) {
                     $Toast.hide();
                     $Toast({
-                        content  : '松开手指取消',
-                        image    : '/static/images/back.png',
-                        duration : 0,
-                    });
+                               content: '松开手指取消',
+                               image: '/static/images/back.png',
+                               duration: 0,
+                           });
                     this.sendLock = false; //上划距离不足，依然可以发送，不上锁
                 }
             },
@@ -604,14 +648,14 @@
                 this.playVoiceBtnShow = false;
                 this.luyinwenzi = "长按添加录音"
             },
-            SelectPreview     : function(k){
+            SelectPreview: function (k){
                 var wx = mpvue
                 var urls = []
                 urls.push(this.imgsUrl[k])
                 wx.previewImage({
-                    current : urls[0], // 当前显示图片的http链接
-                    urls    : urls // 需要预览的图片http链接列表
-                })
+                                    current: urls[0], // 当前显示图片的http链接
+                                    urls: urls // 需要预览的图片http链接列表
+                                })
             },
             deleteImg(e){
                 var _this = this
@@ -621,7 +665,6 @@
                 _this.imgsUrl[indexOfLoad] = ''
                 _this.imgsId[indexOfLoad] = ''
             },
-
             uploadImg(e){
                 var _this = this
                 var indexOfLoad = e.mp.currentTarget.dataset.upid
@@ -632,82 +675,82 @@
                 let upLength;						//图片数组长度
                 let imgFilePaths;				//图片的本地临时文件路径列表
                 wx.chooseImage({
-                    count      : max || 1,           //一次最多可以选择的图片张数
-                    sizeType   : ['original','compressed'], // 可以指定是原图还是压缩图，默认二者都有
-                    sourceType : ['album','camera'], // 可以指定来源是相册还是相机，默认二者都有
-                    success    : function(res){
-                        // tempFilePath可以作为img标签的src属性显示图片
-                        const tempFilePaths = res.tempFilePaths
-                        // console.log(tempFilePaths);
-                        _this.imgsUrl[indexOfLoad] = tempFilePaths[0]
-                        _this.upload[indexOfLoad].imgurl = tempFilePaths
-                        _this.upload[indexOfLoad].show = true
-                        /**
-                         * 上传完成后把文件上传到服务器
-                         */
-                        _this.fileUpload(tempFilePaths,indexOfLoad)
-                        // $Toast({
-                        //     content: '开始上传文件',
-                        //     type: 'warning'
-                        // });
-                    },
-                    fail       : function(){
-                        console.log('fail');
-                        $Toast({
-                            content : '网络错误，请稍后重试',
-                            type    : 'warning'
-                        });
-                    },
-                    complete   : function(){
-                        console.log('完成同步上传');
-                    }
-                })
+                                   count: max || 1,           //一次最多可以选择的图片张数
+                                   sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                                   sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                                   success: function (res){
+                                       // tempFilePath可以作为img标签的src属性显示图片
+                                       const tempFilePaths = res.tempFilePaths
+                                       // console.log(tempFilePaths);
+                                       _this.imgsUrl[indexOfLoad] = tempFilePaths[0]
+                                       _this.upload[indexOfLoad].imgurl = tempFilePaths
+                                       _this.upload[indexOfLoad].show = true
+                                       /**
+                                        * 上传完成后把文件上传到服务器
+                                        */
+                                       _this.fileUpload(tempFilePaths, indexOfLoad)
+                                       // $Toast({
+                                       //     content: '开始上传文件',
+                                       //     type: 'warning'
+                                       // });
+                                   },
+                                   fail: function (){
+                                       console.log('fail');
+                                       $Toast({
+                                                  content: '网络错误，请稍后重试',
+                                                  type: 'warning'
+                                              });
+                                   },
+                                   complete: function (){
+                                       console.log('完成同步上传');
+                                   }
+                               })
             },
-            fileUpload : function(tempFilePaths,index){
+            fileUpload: function (tempFilePaths, index){
                 console.log("待上传 ：" + tempFilePaths);
                 var wx = mpvue
                 var that = this;
                 var _this = this
                 wx.uploadFile({
-                    url      : "https://hd.xmountguan.com/railway/upload_single_pic.aspx",//url地址， //app.ai_api.File.file
-                    filePath : tempFilePaths.toString(),//要上传文件资源的路径 String类型
-                    name     : 'uploadimg',//按个人情况修改，文件对应的 key,开发者在服务器端通过这个 key 可以获取到文件二进制内容，(后台接口规定的关于图片的请求参数)
-                    header   : {
-                        "Content-Type" : "multipart/form-data"//记得设置
-                    },
-                    formData : {
-                        //和服务器约定的token, 一般也可以放在header中
-                        // 'session_token': wx.getStorageSync('session_token')
-                    },
-                    success  : function(res){
-                        //当调用uploadFile成功之后，再次调用后台修改的操作，这样才真正做了修改头像
-                        if(res.statusCode = 200){
-                            var data = JSON.parse(res.data)
-                            // var statusCode = res.statusCode
-                            // console.log("返回值1" + data);
-                            // console.log("返回值2" + statusCode)
-                            //这里调用后台的修改操作， tempFilePaths[0],是上面uploadFile上传成功，然后赋值到修改这里。
-                            console.log(data);
-                            console.log("文件路径" + data.imgurl);
-                            _this.imgsUrl[index] = data.imgurl
-                            _this.upload[index].imgurl = data.imgurl
-                            _this.imgsId[index] = data.imgID
-                            console.log("待提交文件",_this.upload)
-                            // $Toast({
-                            //     content: '上传成功',
-                            //     type: 'success',
-                            //     duration: 2,
-                            // });
-                        }
-                    },
-                    fail(e){
-                        console.log(e);
-                        $Toast({
-                            content : '网络错误，请稍后重试',
-                            type    : 'warning'
-                        });
-                    }
-                })
+                                  url: "https://hd.xmountguan.com/railway/upload_single_pic.aspx",//url地址， //app.ai_api.File.file
+                                  filePath: tempFilePaths.toString(),//要上传文件资源的路径 String类型
+                                  name: 'uploadimg',//按个人情况修改，文件对应的 key,开发者在服务器端通过这个 key 可以获取到文件二进制内容，(后台接口规定的关于图片的请求参数)
+                                  header: {
+                                      "Content-Type": "multipart/form-data"//记得设置
+                                  },
+                                  formData: {
+                                      //和服务器约定的token, 一般也可以放在header中
+                                      // 'session_token': wx.getStorageSync('session_token')
+                                  },
+                                  success: function (res){
+                                      //当调用uploadFile成功之后，再次调用后台修改的操作，这样才真正做了修改头像
+                                      if (res.statusCode = 200) {
+                                          var data = JSON.parse(res.data)
+                                          // var statusCode = res.statusCode
+                                          // console.log("返回值1" + data);
+                                          // console.log("返回值2" + statusCode)
+                                          //这里调用后台的修改操作， tempFilePaths[0],是上面uploadFile上传成功，然后赋值到修改这里。
+                                          console.log(data);
+                                          console.log("文件路径" + data.imgurl);
+                                          _this.imgsUrl[index] = data.imgurl
+                                          _this.upload[index].imgurl = data.imgurl
+                                          _this.imgsId[index] = data.imgID
+                                          console.log("待提交文件", _this.upload)
+                                          // $Toast({
+                                          //     content: '上传成功',
+                                          //     type: 'success',
+                                          //     duration: 2,
+                                          // });
+                                      }
+                                  },
+                                  fail(e){
+                                      console.log(e);
+                                      $Toast({
+                                                 content: '网络错误，请稍后重试',
+                                                 type: 'warning'
+                                             });
+                                  }
+                              })
             },
             finishCertain(){
                 var _this = this;
@@ -715,128 +758,122 @@
                 var flg1 = this.imgsId[0]
                 var flg2 = this.imgsId[1]
                 var imgsidforload = ''
-                if(flg1 && flg2){
+                if (flg1 && flg2) {
                     imgsidforload = this.imgsId.join(',')
-                } else if(flg1){
+                } else if (flg1) {
                     imgsidforload = this.imgsId[0]
-                } else if(flg2){
+                } else if (flg2) {
                     imgsidforload = this.imgsId[1]
                 }
                 wx.request({
-                    url : 'https://hd.xmountguan.com/railway/order.aspx?func=update_order&oid=' + this.oid + '&uid=' + wx.getStorageSync("UID") + "&order_status=3" + '&maintenancePics=' + imgsidforload + '&process=' + this.beizhu,
-                    success(res){
-                        console.log(res.data)
-                        if(res.data.success){
-                            $Toast({
-                                content  : '操作成功',
-                                type     : 'success',
-                                duration : 2,
-                            });
-                            _this.detail.state = 2
-                            _this.finishShow = false;
-                            _this.dingdanfinish = false;
-                            _this.refresh()
-                            wx.setStorageSync('stateChange','2');
-                            _this.refresh()
-                        } else {
-                            $Toast({
-                                content : '操作失败',
-                                type    : 'warning'
-                            });
-                            _this.refresh()
-                        }
-                    }
-                })
+                               url: 'https://hd.xmountguan.com/railway/order.aspx?func=update_order&oid=' + this.oid + '&uid=' + wx.getStorageSync("UID") + "&order_status=3" + '&maintenancePics=' + imgsidforload + '&process=' + this.beizhu,
+                               success(res){
+                                   console.log(res.data)
+                                   if (res.data.success) {
+                                       $Toast({
+                                                  content: '操作成功',
+                                                  type: 'success',
+                                                  duration: 2,
+                                              });
+                                       _this.detail.state = 2
+                                       _this.finishShow = false;
+                                       _this.dingdanfinish = false;
+                                       _this.refresh()
+                                       wx.setStorageSync('stateChange', '2');
+                                       _this.refresh()
+                                   } else {
+                                       $Toast({
+                                                  content: '操作失败',
+                                                  type: 'warning'
+                                              });
+                                       _this.refresh()
+                                   }
+                               }
+                           })
             },
             workerEndcertain(){
-
                 var _this = this;
                 console.log("确认完成");
                 var flg1 = this.imgsId[0]
                 var flg2 = this.imgsId[1]
                 var imgsidforload = ''
-                if(flg1 && flg2){
+                if (flg1 && flg2) {
                     imgsidforload = this.imgsId.join(',')
-                } else if(flg1){
+                } else if (flg1) {
                     imgsidforload = this.imgsId[0]
-                } else if(flg2){
+                } else if (flg2) {
                     imgsidforload = this.imgsId[1]
                 }
-                if(imgsidforload!==""&&_this.beizhu!==""){
+                if (imgsidforload !== "" && _this.beizhu !== "") {
                     console.log(_this.beizhu);
                     console.log(imgsidforload);
-                      wx.request({
-                          url : 'https://hd.xmountguan.com/railway/order.aspx?func=update_order&oid=' + _this.OID + '&uid=' + _this.workerUID + "&repair_status=" + (_this.index3 + 2) + '&repair_pics=' + imgsidforload + '&repair_content=' + _this.beizhu,
-                          success(res){
-                              console.log(res.data)
-                              _this.finishShow = false;
-                              if(res.data.success){
-                                  $Toast({
-                                      content  : '操作成功',
-                                      type     : 'success',
-                                      duration : 2,
-                                  });
-
-
-
-                              } else {
-                                  $Toast({
-                                      content : '操作失败',
-                                      type    : 'warning'
-                                  });
-
-                              }
-                          }
-                      })
-                }else {
+                    wx.request({
+                                   url: 'https://hd.xmountguan.com/railway/order.aspx?func=update_repair&oid=' + _this.OID + '&uid=' + _this.workerUID + "&repair_status=" + (_this.index3 + 2) + '&repair_pics=' + imgsidforload + '&repair_content=' + _this.beizhu,
+                                   success(res){
+                                       console.log(res.data)
+                                       _this.finishShow = false;
+                                       if (res.data.success) {
+                                           $Toast({
+                                                      content: '操作成功',
+                                                      type: 'success',
+                                                      duration: 2,
+                                                  });
+                                           _this.Repairs[_this.repairIndex].RepairStatus = '维修完毕'
+                                       } else {
+                                           $Toast({
+                                                      content: '操作失败',
+                                                      type: 'warning'
+                                                  });
+                                       }
+                                   }
+                               })
+                } else {
                     console.log("确认完成");
                     $Toast({
-                        content : '请完善信息',
-                        type    : 'warning'
-                    });
+                               content: '请完善信息',
+                               type: 'warning'
+                           });
                 }
-
-
             },
             //确认派单
             paidan(){
                 var _this = this
                 console.log(this.peoplecurrentindex)
                 console.log(this.daochangshijian)
-                if(this.peoplecurrentindex.length < 1){
+                if (this.peoplecurrentindex.length < 1) {
                     $Toast({
-                        content : '请选择维修人员',
-                        type    : 'warning'
-                    });
-                } else if(this.daochangshijian == ""){
+                               content: '请选择维修人员',
+                               type: 'warning'
+                           });
+                } else if (this.daochangshijian == "") {
                     $Toast({
-                        content : '请选择到场时间',
-                        type    : 'warning'
-                    });
+                               content: '请选择到场时间',
+                               type: 'warning'
+                           });
                 } else {
                     wx.request({
-                        url : 'https://hd.xmountguan.com/railway/order.aspx?func=get_accept_order&oid=' + this.oid + '&uid=' + wx.getStorageSync("UID") + "&repair_uid=" + this.peoplecurrentindex.join(',') + '&assigntime=' + this.daochangshijian,
-                        success(res){
-                            console.log(res.data)
-                            if(res.data.success){
-                                $Toast({
-                                    content  : '派单成功',
-                                    type     : 'success',
-                                    duration : 2,
-                                });
-                                _this.detail.state = 1
-                                _this.paidanShow = false
-                                wx.setStorageSync('stateChange','1');
-                                _this.refresh()
-                            } else {
-                                $Toast({
-                                    content : '操作失败',
-                                    type    : 'warning'
-                                });
-                                _this.refresh()
-                            }
-                        }
-                    })
+                                   url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_accept_order&oid=' + this.oid + '&uid=' + wx.getStorageSync("UID") + "&repair_uid=" + this.peoplecurrentindex.join(',') + '&assigntime=' + this.daochangshijian,
+                                   success(res){
+                                       console.log(res.data)
+                                       if (res.data.success) {
+                                           $Toast({
+                                                      content: '派单成功',
+                                                      type: 'success',
+                                                      duration: 2,
+                                                  });
+                                           _this.detail.state = 1
+                                           _this.paidanShow = false
+                                           wx.setStorageSync('stateChange', '1');
+                                           _this.refresh()
+                                       } else {
+                                           $Toast({
+                                                      content: '操作失败',
+                                                      type: 'warning'
+                                                  });
+                                           _this.refresh()
+                                       }
+                                   }
+                               })
                 }
             },
             refresh(){
@@ -846,65 +883,65 @@
                 console.log(this.$root.$mp.appOptions)
                 console.log(this.$root.$mp.query)
                 wx.request({
-                    url : 'https://hd.xmountguan.com/railway/order.aspx?func=get_pending_detail&oid=' + this.oid,
-                    success(res){
-                        var databack = res.data
-                        var statusText = databack.OrderStatus
-                        var statuscode = ''
-                        if(statusText == "待处理"){
-                            _this.detail.state = "0"
-                        } else if(statusText == "维修中"){
-                            _this.detail.state = "1"
-                        } else if(statusText == "已完成"){
-                            _this.detail.state = "2"
-                        } else if(statusText == "已中止"){
-                            _this.detail.state = "3"
-                        }
-                        var json = {
-                            statuscode : statuscode,
-                            danhao     : databack.SerialNo,
-                            time       : databack.CreateTime,
-                            name       : databack.ReportUser,
-                            phone      : databack.Mobile,
-                            type       : databack.MaintenanceType,
-                            content    : databack.MaintenanceContentValue,
-                            imgsUrl    : databack.Pictures,
-                            station    : databack.Station,
-                            address    : databack.DetailLocation,
-                            taidanhao  : databack.TaidanNo,
-                        }
-                        _this.origin = json
-                        _this.MaintenancePics = databack.MaintenancePics
-                    }
-                })
+                               url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_pending_detail&oid=' + this.oid,
+                               success(res){
+                                   var databack = res.data
+                                   var statusText = databack.OrderStatus
+                                   var statuscode = ''
+                                   if (statusText == "待处理") {
+                                       _this.detail.state = "0"
+                                   } else if (statusText == "维修中") {
+                                       _this.detail.state = "1"
+                                   } else if (statusText == "已完成") {
+                                       _this.detail.state = "2"
+                                   } else if (statusText == "已中止") {
+                                       _this.detail.state = "3"
+                                   }
+                                   var json = {
+                                       statuscode: statuscode,
+                                       danhao: databack.SerialNo,
+                                       time: databack.CreateTime,
+                                       name: databack.ReportUser,
+                                       phone: databack.Mobile,
+                                       type: databack.MaintenanceType,
+                                       content: databack.MaintenanceContentValue,
+                                       imgsUrl: databack.Pictures,
+                                       station: databack.Station,
+                                       address: databack.DetailLocation,
+                                       taidanhao: databack.TaidanNo,
+                                   }
+                                   _this.origin = json
+                                   _this.MaintenancePics = databack.MaintenancePics
+                               }
+                           })
                 //维修工集合
                 wx.request({
-                    url : 'https://hd.xmountguan.com/railway/user.aspx?func=get_repairman_list&uid=' + wx.getStorageSync('UID'),
-                    success(res){
-                        console.log(res.data)
-                        var databack = res.data
-                        _this.houxuanren = []
-                        for(var i = 0 ; i < databack.length ; i++){
-                            var s = {
-                                id   : databack[i].uid,
-                                name : databack[i].username,
-                            }
-                            _this.houxuanren.push(s)
-                        }
-                    }
-                })
+                               url: 'https://hd.xmountguan.com/railway/user.aspx?func=get_repairman_list&uid=' + wx.getStorageSync('UID'),
+                               success(res){
+                                   console.log(res.data)
+                                   var databack = res.data
+                                   _this.houxuanren = []
+                                   for (var i = 0; i < databack.length; i++) {
+                                       var s = {
+                                           id: databack[i].uid,
+                                           name: databack[i].username,
+                                       }
+                                       _this.houxuanren.push(s)
+                                   }
+                               }
+                           })
             },
             comshow(){
                 console.log(this.detail.state)
-
-                if(this.detail.state == "0"){
+                if (this.detail.state == "0") {
                     return false
                 } else {
                     return true
                 }
             }
         },
-        onShow   : function(options){
+        mounted: function (options){
+            this.role = wx.getStorageSync('Role');
             var _this = this
             this.oid = this.$root.$mp.query.oid;
             this.UID = wx.getStorageSync("UID")
@@ -913,61 +950,59 @@
             console.log(this.$root.$mp.appOptions)
             console.log(this.$root.$mp.query)
             wx.request({
-                url : 'https://hd.xmountguan.com/railway/order.aspx?func=get_pending_detail&oid=' + this.oid,
-                success(res){
-                    var databack = res.data
-                    var statusText = databack.OrderStatus
-                    var statuscode = ''
-                    if(statusText == "待处理"){
-                        _this.detail.state = "0"
-                    } else if(statusText == "维修中"){
-                        _this.detail.state = "1"
-                    } else if(statusText == "已完成"){
-                        _this.detail.state = "2"
-                    } else if(statusText == "已中止"){
-                        _this.detail.state = "3"
-                    }
-                    var json = {
-                        statuscode : statuscode,
-                        danhao     : databack.SerialNo,
-                        time       : databack.CreateTime,
-                        name       : databack.ReportUser,
-                        phone      : databack.Mobile,
-                        type       : databack.MaintenanceType,
-                        content    : databack.MaintenanceContentValue,
-                        imgsUrl    : databack.Pictures,
-                        station    : databack.Station,
-                        address    : databack.DetailLocation,
-                        taidanhao  : databack.TaidanNo,
-                    }
-                    _this.origin = json;
-                    _this.MaintenancePics = databack.MaintenancePics;
-                    _this.Repairs = databack.Repairs;
-                    console.log(_this.Repairs);
-                }
-            })
+                           url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_pending_detail&oid=' + this.oid,
+                           success(res){
+                               var databack = res.data;
+                               console.log(databack);
+                               var statusText = databack.OrderStatus
+                               var statuscode = ''
+                               if (statusText == "待处理") {
+                                   _this.detail.state = "0"
+                               } else if (statusText == "维修中") {
+                                   _this.detail.state = "1"
+                               } else if (statusText == "已完成") {
+                                   _this.detail.state = "2"
+                               } else if (statusText == "已中止") {
+                                   _this.detail.state = "3"
+                               }
+                               var json = {
+                                   statuscode: statuscode,
+                                   danhao: databack.SerialNo,
+                                   time: databack.CreateTime,
+                                   name: databack.ReportUser,
+                                   phone: databack.Mobile,
+                                   type: databack.MaintenanceType,
+                                   content: databack.MaintenanceContentValue,
+                                   imgsUrl: databack.Pictures,
+                                   station: databack.Station,
+                                   address: databack.DetailLocation,
+                                   taidanhao: databack.TaidanNo,
+                               }
+                               _this.origin = json;
+                               _this.MaintenancePics = databack.MaintenancePics;
+                               _this.Repairs = databack.Repairs;
+                               console.log(_this.Repairs);
+                           }
+                       })
             //维修工集合
             wx.request({
-                url : 'https://hd.xmountguan.com/railway/user.aspx?func=get_repairman_list&uid=' + wx.getStorageSync('UID'),
-                success(res){
-                    console.log(res.data)
-                    var databack = res.data
-                    _this.houxuanren = []
-                    for(var i = 0 ; i < databack.length ; i++){
-                        var s = {
-                            id   : databack[i].uid,
-                            name : databack[i].username,
-                        }
-                        _this.houxuanren.push(s)
-                    }
-                }
-            })
-
-
+                           url: 'https://hd.xmountguan.com/railway/user.aspx?func=get_repairman_list&uid=' + wx.getStorageSync('UID'),
+                           success(res){
+                               console.log(res.data)
+                               var databack = res.data
+                               _this.houxuanren = []
+                               for (var i = 0; i < databack.length; i++) {
+                                   var s = {
+                                       id: databack[i].uid,
+                                       name: databack[i].username,
+                                   }
+                                   _this.houxuanren.push(s)
+                               }
+                           }
+                       })
         },
-        mounted(){
-            this.role = wx.getStorageSync('Role');
-        }
+
+
     }
 </script>
 <style>
@@ -1436,7 +1471,6 @@
         margin-bottom: 10rpx;
         border-radius: 12rpx;
         overflow: hidden;
-
     }
 
     .lists {
