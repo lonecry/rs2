@@ -1,50 +1,51 @@
 <template>
-    <div style = "padding-bottom:150rpx;">
-        <div class = "ipts">
-            <span class = "ititle">报修单号:</span>
-            <span class = "ript">{{origin.danhao}}</span>
+    <div style="padding-bottom:150rpx;">
+        <div class="ipts">
+            <span class="ititle">报修单号:</span>
+            <span class="ript">{{origin.danhao}}</span>
         </div>
-        <div class = "ipts">
-            <span class = "ititle">状态</span>
-            <span :class = "[{  gray  : detail.state=='0' },{  yellow  : detail.state=='1' },{  green  : detail.state=='2' },{  red  : detail.state=='3' }, 'ript']">{{detail.state==0?"待处理":(detail.state==1?"维修中":(detail.state==2?"已完成":"已中止"))}}</span>
+        <div class="ipts">
+            <span class="ititle">状态</span>
+            <span
+                :class="[{  gray  : detail.state=='0' },{  yellow  : detail.state=='1' },{  green  : detail.state=='2' },{  red  : detail.state=='3' }, 'ript']">{{detail.state==0?"待处理":(detail.state==1?"维修中":(detail.state==2?"已完成":"已中止"))}}</span>
         </div>
-        <div v-if = "detail.state==3" class = "ipts">
-            <span class = "ititle">反馈理由:</span>
-            <span class = "ript riptcontent">{{detail.fktype}}</span>
+        <div v-if="detail.state==3" class="ipts">
+            <span class="ititle">反馈理由:</span>
+            <span class="ript riptcontent">{{detail.fktype}}</span>
         </div>
-        <div v-if = "detail.state==3" class = "ipts">
-            <span class = "ititle" style = "float: none;">备注:</span>
-            <span class = "  fkbeizhu">{{detail.fkbeizhu }}</span>
+        <div v-if="detail.state==3" class="ipts">
+            <span class="ititle" style="float: none;">备注:</span>
+            <span class="  fkbeizhu">{{detail.fkbeizhu }}</span>
         </div>
-        <div v-if = "detail.state==1" class = "ipts">
-            <span class = "ititle">维修工:</span>
-            <span class = "ript">{{detail.weixiugong}}</span>
+        <div v-if="detail.state==1" class="ipts">
+            <span class="ititle">维修工:</span>
+            <span class="ript">{{detail.weixiugong}}</span>
         </div>
-        <div v-if = "detail.state==1" class = "ipts">
-            <span class = "ititle">到场时间:</span>
-            <span class = "ript">{{detail.arrivetime}}</span>
+        <div v-if="detail.state==1" class="ipts">
+            <span class="ititle">到场时间:</span>
+            <span class="ript">{{detail.arrivetime}}</span>
         </div>
-        <div class = "ipts">
-            <span class = "ititle">报修人姓名:</span>
-            <span class = "ript">{{origin.name}}</span>
+        <div class="ipts">
+            <span class="ititle">报修人姓名:</span>
+            <span class="ript">{{origin.name}}</span>
         </div>
-        <div class = "ipts">
-            <span class = "ititle">手机号:</span>
-            <span class = "ript phone" @click = 'makeacall' :data-cell = "origin.phone">{{origin.phone}}</span>
+        <div class="ipts">
+            <span class="ititle">手机号:</span>
+            <span class="ript phone" @click='makeacall' :data-cell="origin.phone">{{origin.phone}}</span>
         </div>
-        <div class = "ipts">
-            <span class = "ititle">报修类型:</span>
-            <span class = "ript ">{{origin.type}}</span>
+        <div class="ipts">
+            <span class="ititle">报修类型:</span>
+            <span class="ript ">{{origin.type}}</span>
         </div>
-        <div class = "ipts">
-            <span class = "ititle">报修内容:</span>
-            <span class = "ript riptcontent">{{origin.content}}</span>
+        <div class="ipts">
+            <span class="ititle">报修内容:</span>
+            <span class="ript riptcontent">{{origin.content}}</span>
         </div>
-        <div class = "ipts">
-            <span class = "ititle imgs ">现场图片:</span>
-            <div style = "margin-left:45rpx;width:auto;">
-                <div class = "imgbox" v-for = "(item,index) in origin.imgsUrl" :key = "index">
-                    <img :src = "item" :mode = "'widthFix'" @click = 'preview(index)' class = "slt" alt = "缩略图">
+        <div class="ipts">
+            <span class="ititle imgs ">现场图片:</span>
+            <div style="margin-left:45rpx;width:auto;">
+                <div class="imgbox" v-for="(item,index) in origin.imgsUrl" :key="index">
+                    <img :src="item" :mode="'widthFix'" @click='preview(index)' class="slt" alt="缩略图">
                 </div>
             </div>
         </div>
@@ -56,42 +57,46 @@
                 </div>
             </div>
         </div>-->
-        <div class = "ipts">
-            <span class = "ititle">车站：</span>
-            <div class = "loca">
-                <i-icon style = "position:relative;top:-4rpx;" type = "coordinates_fill" size = "26" color = "#2d8cf0" class = "usericon"/>
-                <span class = "spans  ">{{origin.station}}</span>
+        <div class="ipts">
+            <span class="ititle">车站：</span>
+            <div class="loca">
+                <i-icon style="position:relative;top:-4rpx;" type="coordinates_fill" size="26" color="#2d8cf0"
+                        class="usericon"/>
+                <span class="spans  ">{{origin.station}}</span>
             </div>
         </div>
-        <div class = "ipts">
-            <span class = "ititle" style = "float: none;">详细位置：</span>
-            <span class = "address addressworker">{{origin.address }}</span>
+        <div class="ipts">
+            <span class="ititle" style="float: none;">详细位置：</span>
+            <span class="address addressworker">{{origin.address }}</span>
         </div>
-        <div class = "ipts" v-if = "detail.state!=='0'&&detail.state!=='4'" style = "padding: 10rpx;border: 2rpx dashed  rgba(255,209,119,0.96);box-sizing: border-box;width: 92%;">
+        <div class="ipts" v-if="detail.state!=='0'&&detail.state!=='4'"
+             style="padding: 10rpx;border: 2rpx dashed  rgba(255,209,119,0.96);box-sizing: border-box;width: 92%;">
             <span>维修详情：</span>
-            <div class = "weixiug" v-for = "(item,index) in  Repairs" :key = "index">
-                <div class = "lists">
-                    <span class = "listsleft">维修工：</span>
-                    <span class = "listsright">{{item.UserName}}</span>
+            <div class="weixiug" v-for="(item,index) in  Repairs" :key="index">
+                <div class="lists">
+                    <span class="listsleft">维修工：</span>
+                    <span class="listsright">{{item.UserName}}</span>
                 </div>
-                <div class = "lists">
-                    <span class = "listsleft">电话：</span>
-                    <span class = "listsright phone" @click = 'makeacall' :data-cell = "item.Mobile">{{item.Mobile}}</span>
+                <div class="lists">
+                    <span class="listsleft">电话：</span>
+                    <span class="listsright phone" @click='makeacall' :data-cell="item.Mobile">{{item.Mobile}}</span>
                 </div>
-                <div class = "lists">
-                    <span class = "listsleft">状态：</span>
-                    <span class = "listsright">{{item.RepairStatus}}</span>
+                <div class="lists">
+                    <span class="listsleft">状态：</span>
+                    <span class="listsright">{{item.RepairStatus}}</span>
                 </div>
-                <div class = "lsits" v-if = "!workimgshow(index)">
-                    <span class = "ititle imgs ">现场图片:</span>
-                    <div style = "margin-left:45rpx;width:auto;">
-                        <div class = "imgbox" v-for = "(listitem,listindex) in item.RepairPics" :key = "listindex">
-                            <img :src = "listitem" :mode = "'widthFix'" @click = 'workeRpreview(listindex,item.RepairPics)' class = "slt" alt = "缩略图">
+                <div class="lsits" > <!--v-if="item.imgsShow"-->
+                    <span class="ititle imgs ">现场图片:</span>
+                    <div style="margin-left:45rpx;width:auto;">
+                        <div class="imgbox" v-for="(listitem,listindex) in item.RepairPics" :key="listindex">
+                            <img :src="listitem" :mode="'widthFix'" @click='workeRpreview(listindex,item.RepairPics)'
+                                 class="slt" alt="缩略图">
                         </div>
                     </div>
                 </div>
-                <i-button type = "info" v-if = "item.RepairStatus =='维修中'&&UID==item.UID&&detail.state =='1'"
-                          :data-index = "index" :data-uid = "item.UID" size = "small" style = "display: block;margin-top: 60rpx" @click =
+                <i-button type="info" v-if="item.RepairStatus =='维修中'&&UID==item.UID&&detail.state =='1'"
+                          :data-index="index" :data-uid="item.UID" size="small" style="display: block;margin-top: 60rpx"
+                          @click=
                               "repairend">
                     确认维修结束
                 </i-button>
@@ -102,60 +107,63 @@
                <span class="ript">{{origin.taidanhao}}</span>
            </div>
           -->
-        <i-row :class = "'buttons'" v-if = "peopletype=='gz'&&role==2">
-            <i-col v-if = "detail.state=='0'" :span = "16">
-                <i-button type = "primary" @click = "jiedan">接 单</i-button>
+        <i-row :class="'buttons'" v-if="peopletype=='gz'&&role==2">
+            <i-col v-if="detail.state=='0'" :span="16">
+                <i-button type="primary" @click="jiedan">接 单</i-button>
             </i-col>
-            <i-col v-else-if = "detail.state=='1'" :span = "16">
-                <i-button type = "success" @click = "finish">确认完成</i-button>
+            <i-col v-else-if="detail.state=='1'" :span="16">
+                <i-button type="success" @click="finish">确认完成</i-button>
             </i-col>
-            <i-col :span = "8" v-if = "detail.state=='0'||detail.state=='1' ">
-                <i-button type = "warning" @click = "fankui">反 馈</i-button>
+            <i-col :span="8" v-if="detail.state=='0'||detail.state=='1' ">
+                <i-button type="warning" @click="fankui">反 馈</i-button>
             </i-col>
         </i-row>
-        <view class = "paidan" v-if = "paidanShow">
-            <view class = "paidancard">
-                <img src = "/static/images/close.png" class = "cardclose" @click = "paidanToggle">
-                <span class = "cardtitle">派单</span>
-                <span class = "cardline">
-                    <span class = "linetitel">*维修人员</span>
-                    <span class = "linedetail" @click.stop = "selectPeople">{{peoples}} > </span>
+        <view class="paidan" v-if="paidanShow">
+            <view class="paidancard">
+                <img src="/static/images/close.png" class="cardclose" @click="paidanToggle">
+                <span class="cardtitle">派单</span>
+                <span class="cardline">
+                    <span class="linetitel">*维修人员</span>
+                    <span class="linedetail" @click.stop="selectPeople">{{peoples}} > </span>
                 </span>
-                <span class = "cardline" style = "margin-bottom:75rpx;">
-                    <span class = "linetitel">*到场时间</span>
-                    <span class = "linedetail" @click.stop.click = "dateTimePick">{{dateSelected}} > </span>
+                <span class="cardline" style="margin-bottom:75rpx;">
+                    <span class="linetitel">*到场时间</span>
+                    <span class="linedetail" @click.stop.click="dateTimePick">{{dateSelected}} > </span>
                 </span>
-                <view class = "sure">
-                    <i-button type = "primary" @click = 'paidan'>确认派单</i-button>
+                <view class="sure">
+                    <i-button type="primary" @click='paidan'>确认派单</i-button>
                 </view>
             </view>
-            <van-popup :show = "datepickershow" position = "bottom">
-                <van-datetime-picker :type = "'datetime'" :data-value = "currentDate" :value = "peoplecurrent" v-model = "currentDate" :min-date = "minDate" @confirm = "confirm" @cancel = "cancel"/>
+            <van-popup :show="datepickershow" position="bottom">
+                <van-datetime-picker :type="'datetime'" :data-value="currentDate" :value="peoplecurrent"
+                                     v-model="currentDate" :min-date="minDate" @confirm="confirm" @cancel="cancel"/>
             </van-popup>
-            <van-popup :show = "peoplepickershow" position = "bottom">
-                <view class = "check">
-                    <span class = "ckitem ckitem1" @click = "peosltcancel">取消</span>
-                    <span class = "ckitem ckitem2" @click = "peosltsure">确定</span>
+            <van-popup :show="peoplepickershow" position="bottom">
+                <view class="check">
+                    <span class="ckitem ckitem1" @click="peosltcancel">取消</span>
+                    <span class="ckitem ckitem2" @click="peosltsure">确定</span>
                 </view>
-                <scroll-view scroll-y = "true" :style = "{ height: '460rpx'}">
+                <scroll-view scroll-y="true" :style="{ height: '460rpx'}">
                     <i-panel>
-                        <i-checkbox-group :current = "peoplecurrent" :data-set = "peoplecurrent" @change = "handleFruitChange">
-                            <i-checkbox v-for = " (item,index) in houxuanren" :position = "'right'" :key = "item.id" :data-sid = "item.id" :value = "item.name">
+                        <i-checkbox-group :current="peoplecurrent" :data-set="peoplecurrent"
+                                          @change="handleFruitChange">
+                            <i-checkbox v-for=" (item,index) in houxuanren" :position="'right'" :key="item.id"
+                                        :data-sid="item.id" :value="item.name">
                             </i-checkbox>
                         </i-checkbox-group>
                     </i-panel>
                 </scroll-view>
             </van-popup>
         </view>
-        <view class = "fankui" v-if = "fankuiShow" @touchmove.stop = "">
-            <view class = "fankuicard">
-                <img src = "/static/images/close.png" class = "cardclose" @click = "fankuiToggle">
-                <span class = "cardtitle">反馈</span>
-                <span class = "fklytxt">*反馈理由</span>
-                <view class = "section">
-                    <view class = "reasons">
-                        <picker @change = "bindPickerChange" :value = "index" :range = "array">
-                            <view class = "picker">
+        <view class="fankui" v-if="fankuiShow" @touchmove.stop="">
+            <view class="fankuicard">
+                <img src="/static/images/close.png" class="cardclose" @click="fankuiToggle">
+                <span class="cardtitle">反馈</span>
+                <span class="fklytxt">*反馈理由</span>
+                <view class="section">
+                    <view class="reasons">
+                        <picker @change="bindPickerChange" :value="index" :range="array">
+                            <view class="picker">
                                 {{array[index]?array[index] :'请选择理由'}}
                             </view>
                         </picker>
@@ -166,8 +174,9 @@
                         <!--</picker>-->
                     </view>
                 </view>
-                <span class = "fklytxt">备注</span>
-                <textarea v-if = "fankuiShow" class = "fklyDesc" @touchmove.prevent = "" v-model = "fklyDesc" type = "textarea" maxlength = "200" autofocus placeholder = "  输入备注内容（200字内）"></textarea>
+                <span class="fklytxt">备注</span>
+                <textarea v-if="fankuiShow" class="fklyDesc" @touchmove.prevent="" v-model="fklyDesc" type="textarea"
+                          maxlength="200" autofocus placeholder="  输入备注内容（200字内）"></textarea>
                 <!-- <span class = "fklytxt">录音汇报</span>
                  <button class = "fkbtns" @longpress = "start" @touchmove = "handleTouchMove" @touchend = "stop">
                      {{luyinwenzi}}
@@ -177,40 +186,45 @@
                      <span> {{time}}秒</span>
                  </button>
                  <img v-if = "playVoiceBtnShow" src = "/static/images/shanchu.png" class = "deleteVoice" @click.stop = "deleteVoice">-->
-                <view class = "fkbtn">
-                    <i-button type = "primary" @click.stop = "quedingfankui">确认反馈</i-button>
+                <view class="fkbtn">
+                    <i-button type="primary" @click.stop="quedingfankui">确认反馈</i-button>
                 </view>
             </view>
         </view>
-        <view class = "finish" v-if = "finishShow">
-            <view class = "finishcard">
-                <img src = "/static/images/close.png" class = "cardclose" @click = "finishToggle">
-                <span class = "finishend">维修结束</span>
-                <div class = "infos">
-                    <span class = "linetitel">维修状态：</span>
-                    <view class = "section" style = "text-align: right">
-                        <picker @change = "bindPickerChange2" :value = "index3" :range = "finishState">
+        <view class="finish" v-if="finishShow">
+            <view class="finishcard">
+                <img src="/static/images/close.png" class="cardclose" @click="finishToggle">
+                <span class="finishend">维修结束</span>
+                <div class="infos">
+                    <span class="linetitel">维修状态：</span>
+                    <view class="section" style="text-align: right">
+                        <picker @change="bindPickerChange2" :value="index3" :range="finishState">
                             {{finishState[index3]}} >
                         </picker>
                     </view>
                 </div>
-                <span class = "finishtips">*如果维修完成，请上传现场反馈图片。</span>
-                <div class = "uoloadimgs" :data-upid = "index" @click = "uploadImg" v-for = "(item,index) in upload" :key = "index">
+                <span class="finishtips">*如果维修完成，请上传现场反馈图片。</span>
+                <div class="uoloadimgs" :data-upid="index" @click="uploadImg" v-for="(item,index) in upload"
+                     :key="index">
                     <span>+</span>
-                    <span class = "tips">上传图片</span>
-                    <div v-if = "item.show" class = "imgbox">
-                        <img :src = "item.imgurl" :mode = "'widthFix'" @click.stop = "SelectPreview(index)" class = "uploadedimg">
+                    <span class="tips">上传图片</span>
+                    <div v-if="item.show" class="imgbox">
+                        <img :src="item.imgurl" :mode="'widthFix'" @click.stop="SelectPreview(index)"
+                             class="uploadedimg">
                     </div>
-                    <img v-if = "item.show" :data-upid = "index" src = "/static/images/delete.png" @click.stop = 'deleteImg' class = "delete">
+                    <img v-if="item.show" :data-upid="index" src="/static/images/delete.png" @click.stop='deleteImg'
+                         class="delete">
                 </div>
-                <textarea type = "text" placeholder = "备注信息" :value = "beizhu" v-model = "beizhu" style = "border: 0.5px solid #cacaca;display: block;width: 92%;height: 34px;margin-bottom: 17px;padding: 2px;margin: 0 auto;"></textarea>
-                <i-button type = "success" @click.stop = "workerEndcertain" size = "small" style = "position: relative;left: 0;top: 30rpx;">
+                <textarea type="text" placeholder="备注信息" :value="beizhu" v-model="beizhu"
+                          style="border: 0.5px solid #cacaca;display: block;width: 92%;height: 34px;margin-bottom: 17px;padding: 2px;margin: 0 auto;"></textarea>
+                <i-button type="success" @click.stop="workerEndcertain" size="small"
+                          style="position: relative;left: 0;top: 30rpx;">
                     确认结束
                 </i-button>
             </view>
         </view>
-        <i-toast id = "toast"/>
-        <i-modal :visible = "dingdanfinish" @ok = "dingdanfinishShow" @cancel = "dingdanfinishHide">
+        <i-toast id="toast"/>
+        <i-modal :visible="dingdanfinish" @ok="dingdanfinishShow" @cancel="dingdanfinishHide">
             <view>确认完成订单吗？</view>
         </i-modal>
     </div>
@@ -219,7 +233,7 @@
     import {$Toast} from '../../../static/iview/base/index'
     // import {getCurrentPageUrlWithArgs} from '@/utils/index';
     export default {
-        data(){
+        data() {
             return {
                 dingdanfinish: false,
                 UID: '',
@@ -349,11 +363,11 @@
             }
         },
         computed: {
-            judgement: function (){
+            judgement: function () {
                 console.log(this.detail.state);
                 return (this.detail.state == 2 || this.detail.state == 3) ? true : false
             },
-            peoples: function (){
+            peoples: function () {
                 if (this.peoplecurrent.length > 0) {
                     return this.peoplecurrent
                 } else {
@@ -362,124 +376,117 @@
             },
         },
         methods: {
-            dingdanfinishShow(){
+            dingdanfinishShow() {
                 console.log('完成关闭订单，并且更新订单')
                 this.finishCertain()
             },
-            dingdanfinishHide(){
+            dingdanfinishHide() {
                 this.dingdanfinish = false
             },
-            workimgshow: function (index){
-                var data = this.Repairs[index]
-                console.log("datas" + index)
-                if (data.RepairPics[0] == "" && data.RepairPics[1] == "") {
-                    return false
-                } else {
-                    return true
-                }
-                /*for (var i = 0; i < data.RepairPics.length; i++) {
-                 console.log("查看有图？" + data.RepairPics[i]);
+            workimgshow: function (data) {
+                console.log(data);
+                console.log("ssssssssss")
+                var arrtemp = []
+                for (var item of data) {
+                    if (!(data[0] == "" || data[0] == undefined || data[0] == null || typeof (data[0] == 'undefind'))) {
+                        arrtemp.push(item)
+                    }
 
-                 if (data.RepairPics[i] !== "") { //说明有图
-                 this.Repairs[index].workimgsfade = true
-                 return true
-                 console.log('有图')
-                 break;
-                 } else { //说明咩有图
-                 this.Repairs[index].workimgsfade = false
-                 return false;
-                 console.log('无图')
-                 break;
-                 }
-                 }*/
+                }
+
+                if (arrtemp.length > 0) {
+                    return true//show
+                } else {
+                    return false// hide
+                }
+
             },
-            makeacall(e){
+            makeacall(e) {
                 let wx = mpvue
                 let number = e.mp.currentTarget.dataset.cell
                 console.log(number)
                 wx.makePhoneCall({
-                                     phoneNumber: number //仅为示例，并非真实的电话号码
-                                 })
+                    phoneNumber: number //仅为示例，并非真实的电话号码
+                })
             },
-            preview: function (key){
+            preview: function (key) {
                 wx.previewImage({
-                                    current: this.origin.imgsUrl[key], // 当前显示图片的http链接
-                                    urls: this.origin.imgsUrl // 需要预览的图片http链接列表
-                                })
+                    current: this.origin.imgsUrl[key], // 当前显示图片的http链接
+                    urls: this.origin.imgsUrl // 需要预览的图片http链接列表
+                })
             },
-            preview2: function (key){
+            preview2: function (key) {
                 wx.previewImage({
-                                    current: this.MaintenancePics[key], // 当前显示图片的http链接
-                                    urls: this.MaintenancePics // 需要预览的图片http链接列表
-                                })
+                    current: this.MaintenancePics[key], // 当前显示图片的http链接
+                    urls: this.MaintenancePics // 需要预览的图片http链接列表
+                })
             },
-            workeRpreview(key, data){
+            workeRpreview(key, data) {
                 wx.previewImage({
-                                    current: data[key], // 当前显示图片的http链接
-                                    urls: data // 需要预览的图片http链接列表
-                                })
+                    current: data[key], // 当前显示图片的http链接
+                    urls: data // 需要预览的图片http链接列表
+                })
             },
-            jiedan(){
+            jiedan() {
                 this.paidanShow = true
                 console.log("jiedan");
             },
-            fankui(){
+            fankui() {
                 console.log("fankui");
                 this.fankuiShow = true
             },
-            quedingfankui(){
+            quedingfankui() {
                 console.log("fankui");
                 // this.fankuiShow = true
-                var _this=this
-                var wx=mpvue
+                var _this = this
+                var wx = mpvue
 
                 wx.request({
-                               url: 'https://hd.xmountguan.com/railway/order.aspx?func=update_order&oid=' + this.oid+'&order_status=4'+'&uid='+wx.getStorageSync("UID")+"&maintenancePics="+' '+'&process='+_this.fklyDesc,
-                               success(res){
-                                   console.log(res);
-                                   if (res.data.success='success'){
-                                       _this.fankuiShow = false
-                                   }
-                                   _this.detail.state = 4
+                    url: 'https://hd.xmountguan.com/railway/order.aspx?func=update_order&oid=' + this.oid + '&order_status=4' + '&uid=' + wx.getStorageSync("UID") + "&maintenancePics=" + ' ' + '&process=' + _this.fklyDesc,
+                    success(res) {
+                        console.log(res);
+                        if (res.data.success = 'success') {
+                            _this.fankuiShow = false
+                        }
+                        _this.detail.state = 4
 
-                                   wx.setStorageSync('stateChange', '4');
-                                   _this.refresh()
-
-
-                                   _this.detail.fkbeizhu=_this.fklyDesc
-                                   _this.detail.fktype=_this.array[_this.index]
+                        wx.setStorageSync('stateChange', '4');
+                        _this.refresh()
 
 
+                        _this.detail.fkbeizhu = _this.fklyDesc
+                        _this.detail.fktype = _this.array[_this.index]
 
-                               },
-                                fail(w){
-                                    console.log(w);
-                                }
-                           })
+
+                    },
+                    fail(w) {
+                        console.log(w);
+                    }
+                })
 
 
             },
-            repairend(e){
+            repairend(e) {
                 console.log(e);
                 console.log("repairend");
                 this.finishShow = true;
                 this.workerUID = e.mp.currentTarget.dataset.uid
                 this.repairIndex = e.mp.currentTarget.dataset.index
             },
-            finish(){
+            finish() {
                 console.log("finsihed");
                 // this.finishShow = true
                 this.dingdanfinish = true
             },
-            selectPeople: function (){
+            selectPeople: function () {
                 console.log("选择人员")
                 this.peoplepickershow = true
             },
-            dateTimePick: function (){
+            dateTimePick: function () {
                 console.log("dateTimePick")
                 this.datepickershow = true
             },
-            confirm(e){
+            confirm(e) {
                 console.log(e.mp.detail);
                 this.currentDate = e.mp.detail
                 var timeSelected = this.formatDate(e.mp.detail)
@@ -489,11 +496,11 @@
                 this.datepickershow = !this.datepickershow
                 this.daochangshijian = timeSelected
             },
-            cancel: function (){
+            cancel: function () {
                 console.log("pickerclose");
                 this.datepickershow = !this.datepickershow
             },
-            formatDate: function (timestamp){
+            formatDate: function (timestamp) {
                 var date = new Date(timestamp);
                 var Y = date.getFullYear() + '-';
                 var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
@@ -503,7 +510,7 @@
                 var s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
                 return Y + M + D + h + m + s;
             },
-            formatter(type, value){
+            formatter(type, value) {
                 if (type === 'year') {
                     return `${value}年`;
                 } else if (type === 'month') {
@@ -511,10 +518,10 @@
                 }
                 return value;
             },
-            onChange(e){
+            onChange(e) {
                 console.log(e);
             },
-            handleFruitChange: function (e){
+            handleFruitChange: function (e) {
                 var detailvalue = e.mp.detail.value
                 const index = this.peoplecurrent.indexOf(detailvalue);
                 index === -1 ? this.peoplecurrent.push(detailvalue) : this.peoplecurrent.splice(index, 1);
@@ -532,50 +539,50 @@
                 }
                 this.peoplecurrentindex = peoplecurrentindex
             },
-            peosltcancel(){
+            peosltcancel() {
                 this.peoplepickershow = !this.peoplepickershow
             },
-            peosltsure(){
+            peosltsure() {
                 this.peoplepickershow = !this.peoplepickershow
             },
-            paidanToggle(){
+            paidanToggle() {
                 this.paidanShow = !this.paidanShow
             },
-            finishToggle(){
+            finishToggle() {
                 this.finishShow = !this.finishShow
             },
-            fankuiToggle(){
+            fankuiToggle() {
                 this.fankuiShow = !this.fankuiShow
             },
-            bindPickerChange(e){
+            bindPickerChange(e) {
                 console.log('picker发送选择改变，携带值为', e.mp.detail.value)
                 this.index = e.mp.detail.value
             },
-            bindPickerChange2: function (e){
+            bindPickerChange2: function (e) {
                 console.log('picker发送选择改变，携带值为', e.mp.detail.value)
                 this.index3 = e.mp.detail.value
             },
-            play: function (){
+            play: function () {
                 const innerAudioContext = wx.createInnerAudioContext()
                 //播放声音文件
                 innerAudioContext.autoplay = true
                 innerAudioContext.src = this.tempFilePath,
-                    innerAudioContext.onPlay(() =>{
+                    innerAudioContext.onPlay(() => {
                         console.log('开始播放')
                     })
-                innerAudioContext.onError((res) =>{
+                innerAudioContext.onError((res) => {
                     console.log(res.errMsg)
                     console.log(res.errCode)
                 })
             },
-            start: function (e){
+            start: function (e) {
                 console.log(e.y)
                 this.startY = e.y
                 $Toast({
-                           content: '录音中，上滑取消',
-                           image: '/static/images/record.png',
-                           duration: 0,
-                       });
+                    content: '录音中，上滑取消',
+                    image: '/static/images/record.png',
+                    duration: 0,
+                });
                 //开始录音
                 console.log("开始录音")
                 const options = {
@@ -590,28 +597,28 @@
                 const recorderManager = wx.getRecorderManager()
                 //开始录音
                 recorderManager.start(options);
-                recorderManager.onStart(() =>{
+                recorderManager.onStart(() => {
                     console.log('recorder start')
                 });
                 //错误回调
-                recorderManager.onError((res) =>{
+                recorderManager.onError((res) => {
                     console.log(res);
                 })
             },
-            stop: function (){
+            stop: function () {
                 //结束录音
                 console.log("结束录音")
                 $Toast.hide();
                 const recorderManager = wx.getRecorderManager()
                 recorderManager.stop();
-                recorderManager.onStop((res) =>{
+                recorderManager.onStop((res) => {
                     console.log(res);
                     if (res.duration < 1000) {
                         $Toast({
-                                   content: '录音时间太短',
-                                   image: '/static/images/back.png',
-                                   duration: 3,
-                               });
+                            content: '录音时间太短',
+                            image: '/static/images/back.png',
+                            duration: 3,
+                        });
                     } else {
                         this.time = Math.ceil(res.duration / 1000)
                         this.tempFilePath = res.tempFilePath;
@@ -621,43 +628,43 @@
                     }
                 })
             },
-            handleTouchMove(e){
+            handleTouchMove(e) {
                 console.log(e.touches[e.touches.length - 1].clientY - this.startY);
                 //touchmove时触发一
                 var moveLenght = e.touches[e.touches.length - 1].clientY - this.startY; //移动距离
                 if (Math.abs(moveLenght) > 400) {
                     $Toast.hide();
                     $Toast({
-                               content: '松开手指取消',
-                               image: '/static/images/back.png',
-                               duration: 3,
-                           });
+                        content: '松开手指取消',
+                        image: '/static/images/back.png',
+                        duration: 3,
+                    });
                     this.sendLock = true; //触发了上滑取消发送，上锁
                     this.stop()
                 } else if (Math.abs(moveLenght) > 200) {
                     $Toast.hide();
                     $Toast({
-                               content: '松开手指取消',
-                               image: '/static/images/back.png',
-                               duration: 0,
-                           });
+                        content: '松开手指取消',
+                        image: '/static/images/back.png',
+                        duration: 0,
+                    });
                     this.sendLock = false; //上划距离不足，依然可以发送，不上锁
                 }
             },
-            deleteVoice(){
+            deleteVoice() {
                 this.playVoiceBtnShow = false;
                 this.luyinwenzi = "长按添加录音"
             },
-            SelectPreview: function (k){
+            SelectPreview: function (k) {
                 var wx = mpvue
                 var urls = []
                 urls.push(this.imgsUrl[k])
                 wx.previewImage({
-                                    current: urls[0], // 当前显示图片的http链接
-                                    urls: urls // 需要预览的图片http链接列表
-                                })
+                    current: urls[0], // 当前显示图片的http链接
+                    urls: urls // 需要预览的图片http链接列表
+                })
             },
-            deleteImg(e){
+            deleteImg(e) {
                 var _this = this
                 var indexOfLoad = e.mp.currentTarget.dataset.upid
                 _this.upload[indexOfLoad].show = false
@@ -665,7 +672,7 @@
                 _this.imgsUrl[indexOfLoad] = ''
                 _this.imgsId[indexOfLoad] = ''
             },
-            uploadImg(e){
+            uploadImg(e) {
                 var _this = this
                 var indexOfLoad = e.mp.currentTarget.dataset.upid
                 let wx = mpvue
@@ -675,84 +682,84 @@
                 let upLength;						//图片数组长度
                 let imgFilePaths;				//图片的本地临时文件路径列表
                 wx.chooseImage({
-                                   count: max || 1,           //一次最多可以选择的图片张数
-                                   sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-                                   sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-                                   success: function (res){
-                                       // tempFilePath可以作为img标签的src属性显示图片
-                                       const tempFilePaths = res.tempFilePaths
-                                       // console.log(tempFilePaths);
-                                       _this.imgsUrl[indexOfLoad] = tempFilePaths[0]
-                                       _this.upload[indexOfLoad].imgurl = tempFilePaths
-                                       _this.upload[indexOfLoad].show = true
-                                       /**
-                                        * 上传完成后把文件上传到服务器
-                                        */
-                                       _this.fileUpload(tempFilePaths, indexOfLoad)
-                                       // $Toast({
-                                       //     content: '开始上传文件',
-                                       //     type: 'warning'
-                                       // });
-                                   },
-                                   fail: function (){
-                                       console.log('fail');
-                                       $Toast({
-                                                  content: '网络错误，请稍后重试',
-                                                  type: 'warning'
-                                              });
-                                   },
-                                   complete: function (){
-                                       console.log('完成同步上传');
-                                   }
-                               })
+                    count: max || 1,           //一次最多可以选择的图片张数
+                    sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                    sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                    success: function (res) {
+                        // tempFilePath可以作为img标签的src属性显示图片
+                        const tempFilePaths = res.tempFilePaths
+                        // console.log(tempFilePaths);
+                        _this.imgsUrl[indexOfLoad] = tempFilePaths[0]
+                        _this.upload[indexOfLoad].imgurl = tempFilePaths
+                        _this.upload[indexOfLoad].show = true
+                        /**
+                         * 上传完成后把文件上传到服务器
+                         */
+                        _this.fileUpload(tempFilePaths, indexOfLoad)
+                        // $Toast({
+                        //     content: '开始上传文件',
+                        //     type: 'warning'
+                        // });
+                    },
+                    fail: function () {
+                        console.log('fail');
+                        $Toast({
+                            content: '网络错误，请稍后重试',
+                            type: 'warning'
+                        });
+                    },
+                    complete: function () {
+                        console.log('完成同步上传');
+                    }
+                })
             },
-            fileUpload: function (tempFilePaths, index){
+            fileUpload: function (tempFilePaths, index) {
                 console.log("待上传 ：" + tempFilePaths);
                 var wx = mpvue
                 var that = this;
                 var _this = this
                 wx.uploadFile({
-                                  url: "https://hd.xmountguan.com/railway/upload_single_pic.aspx",//url地址， //app.ai_api.File.file
-                                  filePath: tempFilePaths.toString(),//要上传文件资源的路径 String类型
-                                  name: 'uploadimg',//按个人情况修改，文件对应的 key,开发者在服务器端通过这个 key 可以获取到文件二进制内容，(后台接口规定的关于图片的请求参数)
-                                  header: {
-                                      "Content-Type": "multipart/form-data"//记得设置
-                                  },
-                                  formData: {
-                                      //和服务器约定的token, 一般也可以放在header中
-                                      // 'session_token': wx.getStorageSync('session_token')
-                                  },
-                                  success: function (res){
-                                      //当调用uploadFile成功之后，再次调用后台修改的操作，这样才真正做了修改头像
-                                      if (res.statusCode = 200) {
-                                          var data = JSON.parse(res.data)
-                                          // var statusCode = res.statusCode
-                                          // console.log("返回值1" + data);
-                                          // console.log("返回值2" + statusCode)
-                                          //这里调用后台的修改操作， tempFilePaths[0],是上面uploadFile上传成功，然后赋值到修改这里。
-                                          console.log(data);
-                                          console.log("文件路径" + data.imgurl);
-                                          _this.imgsUrl[index] = data.imgurl
-                                          _this.upload[index].imgurl = data.imgurl
-                                          _this.imgsId[index] = data.imgID
-                                          console.log("待提交文件", _this.upload)
-                                          // $Toast({
-                                          //     content: '上传成功',
-                                          //     type: 'success',
-                                          //     duration: 2,
-                                          // });
-                                      }
-                                  },
-                                  fail(e){
-                                      console.log(e);
-                                      $Toast({
-                                                 content: '网络错误，请稍后重试',
-                                                 type: 'warning'
-                                             });
-                                  }
-                              })
+                    url: "https://hd.xmountguan.com/railway/upload_single_pic.aspx",//url地址， //app.ai_api.File.file
+                    filePath: tempFilePaths.toString(),//要上传文件资源的路径 String类型
+                    name: 'uploadimg',//按个人情况修改，文件对应的 key,开发者在服务器端通过这个 key 可以获取到文件二进制内容，(后台接口规定的关于图片的请求参数)
+                    header: {
+                        "Content-Type": "multipart/form-data"//记得设置
+                    },
+                    formData: {
+                        //和服务器约定的token, 一般也可以放在header中
+                        // 'session_token': wx.getStorageSync('session_token')
+                    },
+                    success: function (res) {
+                        //当调用uploadFile成功之后，再次调用后台修改的操作，这样才真正做了修改头像
+                        if (res.statusCode = 200) {
+                            var data = JSON.parse(res.data)
+                            // var statusCode = res.statusCode
+                            // console.log("返回值1" + data);
+                            // console.log("返回值2" + statusCode)
+                            //这里调用后台的修改操作， tempFilePaths[0],是上面uploadFile上传成功，然后赋值到修改这里。
+                            console.log(data);
+                            console.log("文件路径" + data.imgurl);
+                            _this.imgsUrl[index] = data.imgurl
+                            _this.upload[index].imgurl = data.imgurl
+                            _this.imgsId[index] = data.imgID
+                            console.log("待提交文件", _this.upload)
+                            // $Toast({
+                            //     content: '上传成功',
+                            //     type: 'success',
+                            //     duration: 2,
+                            // });
+                        }
+                    },
+                    fail(e) {
+                        console.log(e);
+                        $Toast({
+                            content: '网络错误，请稍后重试',
+                            type: 'warning'
+                        });
+                    }
+                })
             },
-            finishCertain(){
+            finishCertain() {
                 var _this = this;
                 console.log("确认完成");
                 var flg1 = this.imgsId[0]
@@ -766,32 +773,32 @@
                     imgsidforload = this.imgsId[1]
                 }
                 wx.request({
-                               url: 'https://hd.xmountguan.com/railway/order.aspx?func=update_order&oid=' + this.oid + '&uid=' + wx.getStorageSync("UID") + "&order_status=3" + '&maintenancePics=' + imgsidforload + '&process=' + this.beizhu,
-                               success(res){
-                                   console.log(res.data)
-                                   if (res.data.success) {
-                                       $Toast({
-                                                  content: '操作成功',
-                                                  type: 'success',
-                                                  duration: 2,
-                                              });
-                                       _this.detail.state = 2
-                                       _this.finishShow = false;
-                                       _this.dingdanfinish = false;
-                                       _this.refresh()
-                                       wx.setStorageSync('stateChange', '2');
-                                       _this.refresh()
-                                   } else {
-                                       $Toast({
-                                                  content: '操作失败',
-                                                  type: 'warning'
-                                              });
-                                       _this.refresh()
-                                   }
-                               }
-                           })
+                    url: 'https://hd.xmountguan.com/railway/order.aspx?func=update_order&oid=' + this.oid + '&uid=' + wx.getStorageSync("UID") + "&order_status=3" + '&maintenancePics=' + imgsidforload + '&process=' + this.beizhu,
+                    success(res) {
+                        console.log(res.data)
+                        if (res.data.success) {
+                            $Toast({
+                                content: '操作成功',
+                                type: 'success',
+                                duration: 2,
+                            });
+                            _this.detail.state = 2
+                            _this.finishShow = false;
+                            _this.dingdanfinish = false;
+                            _this.refresh()
+                            wx.setStorageSync('stateChange', '2');
+                            _this.refresh()
+                        } else {
+                            $Toast({
+                                content: '操作失败',
+                                type: 'warning'
+                            });
+                            _this.refresh()
+                        }
+                    }
+                })
             },
-            workerEndcertain(){
+            workerEndcertain() {
                 var _this = this;
                 console.log("确认完成");
                 var flg1 = this.imgsId[0]
@@ -808,130 +815,136 @@
                     console.log(_this.beizhu);
                     console.log(imgsidforload);
                     wx.request({
-                                   url: 'https://hd.xmountguan.com/railway/order.aspx?func=update_repair&oid=' + _this.OID + '&uid=' + _this.workerUID + "&repair_status=" + (_this.index3 + 2) + '&repair_pics=' + imgsidforload + '&repair_content=' + _this.beizhu,
-                                   success(res){
-                                       console.log(res.data)
-                                       _this.finishShow = false;
-                                       if (res.data.success) {
-                                           $Toast({
-                                                      content: '操作成功',
-                                                      type: 'success',
-                                                      duration: 2,
-                                                  });
-                                           _this.Repairs[_this.repairIndex].RepairStatus = '维修完毕'
-                                       } else {
-                                           $Toast({
-                                                      content: '操作失败',
-                                                      type: 'warning'
-                                                  });
-                                       }
-                                   }
-                               })
+                        url: 'https://hd.xmountguan.com/railway/order.aspx?func=update_repair&oid=' + _this.OID + '&uid=' + _this.workerUID + "&repair_status=" + (_this.index3 + 2) + '&repair_pics=' + imgsidforload + '&repair_content=' + _this.beizhu,
+                        success(res) {
+                            console.log(res.data)
+                            _this.finishShow = false;
+                            if (res.data.success) {
+                                $Toast({
+                                    content: '操作成功',
+                                    type: 'success',
+                                    duration: 2,
+                                });
+                                _this.Repairs[_this.repairIndex].RepairStatus = '维修完毕'
+                            } else {
+                                $Toast({
+                                    content: '操作失败',
+                                    type: 'warning'
+                                });
+                            }
+                        }
+                    })
                 } else {
                     console.log("确认完成");
                     $Toast({
-                               content: '请完善信息',
-                               type: 'warning'
-                           });
+                        content: '请完善信息',
+                        type: 'warning'
+                    });
                 }
             },
             //确认派单
-            paidan(){
+            paidan() {
                 var _this = this
                 console.log(this.peoplecurrentindex)
                 console.log(this.daochangshijian)
                 if (this.peoplecurrentindex.length < 1) {
                     $Toast({
-                               content: '请选择维修人员',
-                               type: 'warning'
-                           });
+                        content: '请选择维修人员',
+                        type: 'warning'
+                    });
                 } else if (this.daochangshijian == "") {
                     $Toast({
-                               content: '请选择到场时间',
-                               type: 'warning'
-                           });
+                        content: '请选择到场时间',
+                        type: 'warning'
+                    });
                 } else {
                     wx.request({
-                                   url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_accept_order&oid=' + this.oid + '&uid=' + wx.getStorageSync("UID") + "&repair_uid=" + this.peoplecurrentindex.join(',') + '&assigntime=' + this.daochangshijian,
-                                   success(res){
-                                       console.log(res.data)
-                                       if (res.data.success) {
-                                           $Toast({
-                                                      content: '派单成功',
-                                                      type: 'success',
-                                                      duration: 2,
-                                                  });
-                                           _this.detail.state = 1
-                                           _this.paidanShow = false
-                                           wx.setStorageSync('stateChange', '1');
-                                           _this.refresh()
-                                       } else {
-                                           $Toast({
-                                                      content: '操作失败',
-                                                      type: 'warning'
-                                                  });
-                                           _this.refresh()
-                                       }
-                                   }
-                               })
+                        url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_accept_order&oid=' + this.oid + '&uid=' + wx.getStorageSync("UID") + "&repair_uid=" + this.peoplecurrentindex.join(',') + '&assigntime=' + this.daochangshijian,
+                        success(res) {
+                            console.log(res.data)
+                            if (res.data.success) {
+                                $Toast({
+                                    content: '派单成功',
+                                    type: 'success',
+                                    duration: 2,
+                                });
+                                _this.detail.state = 1
+                                _this.paidanShow = false
+                                wx.setStorageSync('stateChange', '1');
+                                _this.refresh()
+                                setTimeout(()=>{
+                                    wx.redirectTo({
+                                      url: '../indexswiper/main'
+                                    })
+                                })
+                            } else {
+                                $Toast({
+                                    content: '操作失败',
+                                    type: 'warning'
+                                });
+                                _this.refresh()
+                            }
+                        }
+                    })
                 }
             },
-            refresh(){
+            refresh() {
                 var _this = this
                 this.oid = this.$root.$mp.query.oid;
                 console.log(this.oid)
                 console.log(this.$root.$mp.appOptions)
                 console.log(this.$root.$mp.query)
                 wx.request({
-                               url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_pending_detail&oid=' + this.oid,
-                               success(res){
-                                   var databack = res.data
-                                   var statusText = databack.OrderStatus
-                                   var statuscode = ''
-                                   if (statusText == "待处理") {
-                                       _this.detail.state = "0"
-                                   } else if (statusText == "维修中") {
-                                       _this.detail.state = "1"
-                                   } else if (statusText == "已完成") {
-                                       _this.detail.state = "2"
-                                   } else if (statusText == "已中止") {
-                                       _this.detail.state = "3"
-                                   }
-                                   var json = {
-                                       statuscode: statuscode,
-                                       danhao: databack.SerialNo,
-                                       time: databack.CreateTime,
-                                       name: databack.ReportUser,
-                                       phone: databack.Mobile,
-                                       type: databack.MaintenanceType,
-                                       content: databack.MaintenanceContentValue,
-                                       imgsUrl: databack.Pictures,
-                                       station: databack.Station,
-                                       address: databack.DetailLocation,
-                                       taidanhao: databack.TaidanNo,
-                                   }
-                                   _this.origin = json
-                                   _this.MaintenancePics = databack.MaintenancePics
-                               }
-                           })
+                    url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_pending_detail&oid=' + this.oid,
+                    success(res) {
+                        var databack = res.data
+                        var statusText = databack.OrderStatus
+                        console.log("statusText" + statusText);
+                        var statuscode = ''
+                        if (statusText == "待处理") {
+                            _this.detail.state = "0"
+                        } else if (statusText == "维修中") {
+                            _this.detail.state = "1"
+                        } else if (statusText == "已完成") {
+                            _this.detail.state = "2"
+                        } else if (statusText == "已中止") {
+                            _this.detail.state = "3"
+                        }
+                        var json = {
+                            statuscode: statuscode,
+                            danhao: databack.SerialNo,
+                            time: databack.CreateTime,
+                            name: databack.ReportUser,
+                            phone: databack.Mobile,
+                            type: databack.MaintenanceType,
+                            content: databack.MaintenanceContentValue,
+                            imgsUrl: databack.Pictures,
+                            station: databack.Station,
+                            address: databack.DetailLocation,
+                            taidanhao: databack.TaidanNo,
+                        }
+                        _this.origin = json
+                        _this.MaintenancePics = databack.MaintenancePics
+                    }
+                })
                 //维修工集合
                 wx.request({
-                               url: 'https://hd.xmountguan.com/railway/user.aspx?func=get_repairman_list&uid=' + wx.getStorageSync('UID'),
-                               success(res){
-                                   console.log(res.data)
-                                   var databack = res.data
-                                   _this.houxuanren = []
-                                   for (var i = 0; i < databack.length; i++) {
-                                       var s = {
-                                           id: databack[i].uid,
-                                           name: databack[i].username,
-                                       }
-                                       _this.houxuanren.push(s)
-                                   }
-                               }
-                           })
+                    url: 'https://hd.xmountguan.com/railway/user.aspx?func=get_repairman_list&uid=' + wx.getStorageSync('UID'),
+                    success(res) {
+                        console.log(res.data)
+                        var databack = res.data
+                        _this.houxuanren = []
+                        for (var i = 0; i < databack.length; i++) {
+                            var s = {
+                                id: databack[i].uid,
+                                name: databack[i].username,
+                            }
+                            _this.houxuanren.push(s)
+                        }
+                    }
+                })
             },
-            comshow(){
+            comshow() {
                 console.log(this.detail.state)
                 if (this.detail.state == "0") {
                     return false
@@ -940,7 +953,7 @@
                 }
             }
         },
-        mounted: function (options){
+        mounted: function (options) {
             this.role = wx.getStorageSync('Role');
             var _this = this
             this.oid = this.$root.$mp.query.oid;
@@ -950,56 +963,74 @@
             console.log(this.$root.$mp.appOptions)
             console.log(this.$root.$mp.query)
             wx.request({
-                           url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_pending_detail&oid=' + this.oid,
-                           success(res){
-                               var databack = res.data;
-                               console.log(databack);
-                               var statusText = databack.OrderStatus
-                               var statuscode = ''
-                               if (statusText == "待处理") {
-                                   _this.detail.state = "0"
-                               } else if (statusText == "维修中") {
-                                   _this.detail.state = "1"
-                               } else if (statusText == "已完成") {
-                                   _this.detail.state = "2"
-                               } else if (statusText == "已中止") {
-                                   _this.detail.state = "3"
-                               }
-                               var json = {
-                                   statuscode: statuscode,
-                                   danhao: databack.SerialNo,
-                                   time: databack.CreateTime,
-                                   name: databack.ReportUser,
-                                   phone: databack.Mobile,
-                                   type: databack.MaintenanceType,
-                                   content: databack.MaintenanceContentValue,
-                                   imgsUrl: databack.Pictures,
-                                   station: databack.Station,
-                                   address: databack.DetailLocation,
-                                   taidanhao: databack.TaidanNo,
-                               }
-                               _this.origin = json;
-                               _this.MaintenancePics = databack.MaintenancePics;
-                               _this.Repairs = databack.Repairs;
-                               console.log(_this.Repairs);
-                           }
-                       })
+                url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_pending_detail&oid=' + this.oid,
+                success(res) {
+                    var databack = res.data;
+                    console.log(databack);
+                    var statusText = databack.OrderStatus
+                    console.log("statusText" + statusText);
+                    var statuscode = ''
+                    if (statusText == "待处理") {
+                        _this.detail.state = "0"
+                    } else if (statusText == "维修中") {
+                        _this.detail.state = "1"
+                    } else if (statusText == "已完成") {
+                        _this.detail.state = "2"
+                    } else if (statusText == "已中止") {
+                        _this.detail.state = "3"
+                    }
+                    var json = {
+                        statuscode: statuscode,
+                        danhao: databack.SerialNo,
+                        time: databack.CreateTime,
+                        name: databack.ReportUser,
+                        phone: databack.Mobile,
+                        type: databack.MaintenanceType,
+                        content: databack.MaintenanceContentValue,
+                        imgsUrl: databack.Pictures,
+                        station: databack.Station,
+                        address: databack.DetailLocation,
+                        taidanhao: databack.TaidanNo,
+                    }
+                    _this.origin = json;
+                    _this.MaintenancePics = databack.MaintenancePics;
+                    _this.Repairs = databack.Repairs;
+                    console.log("innnnnnn")
+
+                    for (var i = 0; i < _this.Repairs.length; i++) {
+                        console.log( "維修詳情");
+                        console.log(_this.Repairs[i]);
+                        var arrleng = _this.Repairs[i].RepairPics //数组
+                        var state = ''
+                        for (var j = 0; j < arrleng; j++) {
+                            console.log(_this.Repairs[i].RepairPics[j]);
+                            if (_this.Repairs[i].RepairPics[j].length>1) {
+                                console.log(_this.Repairs[i].RepairPics[j]);
+                                state = true
+                            }
+                        }
+                        _this.Repairs[i].imgsShow = state
+                    }
+
+                    console.log(_this.Repairs);
+                }
+            })
             //维修工集合
             wx.request({
-                           url: 'https://hd.xmountguan.com/railway/user.aspx?func=get_repairman_list&uid=' + wx.getStorageSync('UID'),
-                           success(res){
-                               console.log(res.data)
-                               var databack = res.data
-                               _this.houxuanren = []
-                               for (var i = 0; i < databack.length; i++) {
-                                   var s = {
-                                       id: databack[i].uid,
-                                       name: databack[i].username,
-                                   }
-                                   _this.houxuanren.push(s)
-                               }
-                           }
-                       })
+                url: 'https://hd.xmountguan.com/railway/user.aspx?func=get_repairman_list&uid=' + wx.getStorageSync('UID'),
+                success(res) {
+                    console.log(res.data)
+                    var databack = res.data
+                    _this.houxuanren = []
+                    for (var i = 0; i < databack.length; i++) {
+                        var s = {
+                            id: databack[i].uid,
+                            name: databack[i].username,
+                        }
+                        _this.houxuanren.push(s)
+                    }
+                }
+            })
         },
 
 
@@ -1350,6 +1381,9 @@
         text-align: justify;
         overflow: hidden;
         display: block;
+        padding: 10rpx;
+        box-sizing: border-box;
+
     }
 
     .fkbtns {
