@@ -72,7 +72,7 @@
         <div class="ipts" v-if="detail.state!=='0'&&detail.state!=='4'"
              style="padding: 10rpx;border: 2rpx dashed  rgba(255,209,119,0.96);box-sizing: border-box;width: 92%;">
             <span>维修详情：</span>
-            <div class="weixiug" v-for="(item,index) in  Repairs" :key="index">
+            <div class="weixiug" v-for="(item,index) in  Repairs" :key="item.RPID">
                 <div class="lists">
                     <span class="listsleft">维修工：</span>
                     <span class="listsright">{{item.UserName}}</span>
@@ -85,11 +85,14 @@
                     <span class="listsleft">状态：</span>
                     <span class="listsright">{{item.RepairStatus}}</span>
                 </div>
-                <div class="lsits" > <!--v-if="item.imgsShow"-->
+                <!--                <div class="lsits" v-if="workimgshow(item.RepairPics)"> &lt;!&ndash;v-if="item.imgsShow"&ndash;&gt;-->
+                <div class="lsits" v-if=" item.imgsShow "> <!--v-if="item.imgsShow"-->
                     <span class="ititle imgs ">现场图片:</span>
                     <div style="margin-left:45rpx;width:auto;">
-                        <div class="imgbox" v-for="(listitem,listindex) in item.RepairPics" :key="listindex">
-                            <img :src="listitem" :mode="'widthFix'" @click='workeRpreview(listindex,item.RepairPics)'
+                        <div class="imgbox" v-for="(listitem,listindex) in item.RepairPics"
+                             :key="item.RPID+listindex">
+                            <img :src="listitem" :mode="'widthFix'"
+                                 @click='workeRpreview(listindex,item.RepairPics)'
                                  class="slt" alt="缩略图">
                         </div>
                     </div>
@@ -164,7 +167,7 @@
                     <view class="reasons">
                         <picker @change="bindPickerChange" :value="index" :range="array">
                             <view class="picker">
-                                {{array[index]?array[index] :'请选择理由'}}
+                                {{array[index]?array[index] +" > ":'请选择理由'}}
                             </view>
                         </picker>
                         <!--<picker @change = "bindPickerChange2" :value = "index2" :range = "array2">-->
@@ -215,8 +218,8 @@
                     <img v-if="item.show" :data-upid="index" src="/static/images/delete.png" @click.stop='deleteImg'
                          class="delete">
                 </div>
-                <textarea type="text" placeholder="备注信息" :value="beizhu" v-model="beizhu"
-                          style="border: 0.5px solid #cacaca;display: block;width: 92%;height: 34px;margin-bottom: 17px;padding: 2px;margin: 0 auto;"></textarea>
+                <input type="text" placeholder="备注信息" :value="beizhu" v-model="beizhu"
+                          style="border: 0.5px solid #cacaca;display: block;width: 92%;height: 34px;margin-bottom: 17px;padding: 2px;margin: 0 auto;"/>
                 <i-button type="success" @click.stop="workerEndcertain" size="small"
                           style="position: relative;left: 0;top: 30rpx;">
                     确认结束
@@ -256,6 +259,7 @@
                 //身份选择
                 //确认完成
                 upload: [
+                    {imgurl: '', show: false},
                     {imgurl: '', show: false},
                     {imgurl: '', show: false},
                 ],
@@ -332,34 +336,7 @@
                 MaintenancePics: [],
                 finishState: ['已完成', '不能完成'],
                 repairIndex: 0,
-                Repairs: [
-                    {
-                        "RPID": 38,
-                        "UID": 1,
-                        "OID": 35,
-                        "UserName": "测试维修工1",
-                        "Mobile": "13111111111",
-                        "RepairStatus": "维修中",
-                        "AssignTime": "2019/8/8 15:45:00",
-                        "AcceptTime": "",
-                        "RepairContent": "",
-                        "RepairPics": [""],
-                        "FinishTime": ""
-                    },
-                    {
-                        "RPID": 39,
-                        "UID": 2,
-                        "OID": 35,
-                        "UserName": "测试维修工2",
-                        "Mobile": "13222222222",
-                        "RepairStatus": "维修中",
-                        "AssignTime": "2019/8/8 15:45:00",
-                        "AcceptTime": "",
-                        "RepairContent": "",
-                        "RepairPics": [""],
-                        "FinishTime": ""
-                    }
-                ],
+                Repairs: [],
             }
         },
         computed: {
@@ -386,14 +363,7 @@
             workimgshow: function (data) {
                 console.log(data);
                 console.log("ssssssssss")
-                var arrtemp = []
-                for (var item of data) {
-                    if (!(data[0] == "" || data[0] == undefined || data[0] == null || typeof (data[0] == 'undefind'))) {
-                        arrtemp.push(item)
-                    }
-
-                }
-
+                var arrtemp = data.join('')
                 if (arrtemp.length > 0) {
                     return true//show
                 } else {
@@ -704,7 +674,7 @@
                     fail: function () {
                         console.log('fail');
                         $Toast({
-                            content: '网络错误，请稍后重试',
+                            content: '已取消',
                             type: 'warning'
                         });
                     },
@@ -762,16 +732,18 @@
             finishCertain() {
                 var _this = this;
                 console.log("确认完成");
-                var flg1 = this.imgsId[0]
-                var flg2 = this.imgsId[1]
+
+
+                var arrtemp = []
                 var imgsidforload = ''
-                if (flg1 && flg2) {
-                    imgsidforload = this.imgsId.join(',')
-                } else if (flg1) {
-                    imgsidforload = this.imgsId[0]
-                } else if (flg2) {
-                    imgsidforload = this.imgsId[1]
+                for (var item of this.imgsId) {
+                    if (!(item == "" || item == undefined || item == null || typeof (item) == "undefined")) {
+                        arrtemp.push(item)
+                    }
                 }
+                imgsidforload = arrtemp.join(',')
+                console.log(imgsidforload);
+
                 wx.request({
                     url: 'https://hd.xmountguan.com/railway/order.aspx?func=update_order&oid=' + this.oid + '&uid=' + wx.getStorageSync("UID") + "&order_status=3" + '&maintenancePics=' + imgsidforload + '&process=' + this.beizhu,
                     success(res) {
@@ -801,46 +773,49 @@
             workerEndcertain() {
                 var _this = this;
                 console.log("确认完成");
-                var flg1 = this.imgsId[0]
-                var flg2 = this.imgsId[1]
+
+
+                var arrtemp = []
                 var imgsidforload = ''
-                if (flg1 && flg2) {
-                    imgsidforload = this.imgsId.join(',')
-                } else if (flg1) {
-                    imgsidforload = this.imgsId[0]
-                } else if (flg2) {
-                    imgsidforload = this.imgsId[1]
+                for (var item of this.imgsId) {
+                    if (!(item == "" || item == undefined || item == null || typeof (item) == "undefined")) {
+                        arrtemp.push(item)
+                    }
                 }
-                if (imgsidforload !== "" && _this.beizhu !== "") {
-                    console.log(_this.beizhu);
-                    console.log(imgsidforload);
-                    wx.request({
-                        url: 'https://hd.xmountguan.com/railway/order.aspx?func=update_repair&oid=' + _this.OID + '&uid=' + _this.workerUID + "&repair_status=" + (_this.index3 + 2) + '&repair_pics=' + imgsidforload + '&repair_content=' + _this.beizhu,
-                        success(res) {
-                            console.log(res.data)
-                            _this.finishShow = false;
-                            if (res.data.success) {
-                                $Toast({
-                                    content: '操作成功',
-                                    type: 'success',
-                                    duration: 2,
-                                });
-                                _this.Repairs[_this.repairIndex].RepairStatus = '维修完毕'
-                            } else {
-                                $Toast({
-                                    content: '操作失败',
-                                    type: 'warning'
-                                });
-                            }
+                imgsidforload = arrtemp.join(',')
+
+                console.log(_this.beizhu);
+                console.log(imgsidforload);
+                wx.request({
+                    url: 'https://hd.xmountguan.com/railway/order.aspx?func=update_repair&oid=' + _this.OID + '&uid=' + _this.workerUID + "&repair_status=" + (_this.index3 + 2) + '&repair_pics=' + imgsidforload + '&repair_content=' + _this.beizhu,
+                    success(res) {
+                        console.log(res.data)
+                        _this.finishShow = false;
+                        if (res.data.success) {
+                            $Toast({
+                                content: '操作成功',
+                                type: 'success',
+                                duration: 2,
+                            });
+                            _this.Repairs[_this.repairIndex].RepairStatus = '维修完毕'
+                            _this.refresh()
+                        } else {
+                            $Toast({
+                                content: '操作失败',
+                                type: 'warning'
+                            });
                         }
-                    })
+                    }
+                })
+               /* if (imgsidforload !== "" && _this.beizhu !== "") {
+
                 } else {
                     console.log("确认完成");
                     $Toast({
                         content: '请完善信息',
                         type: 'warning'
                     });
-                }
+                }*/
             },
             //确认派单
             paidan() {
@@ -872,9 +847,9 @@
                                 _this.paidanShow = false
                                 wx.setStorageSync('stateChange', '1');
                                 _this.refresh()
-                                setTimeout(()=>{
+                                setTimeout(() => {
                                     wx.redirectTo({
-                                      url: '../indexswiper/main'
+                                        url: '../indexswiper/main?frompaidan=yes'
                                     })
                                 })
                             } else {
@@ -923,6 +898,24 @@
                             address: databack.DetailLocation,
                             taidanhao: databack.TaidanNo,
                         }
+
+                        for (var i = 0; i < databack.Repairs.length; i++) {
+                            console.log("維修詳情");
+                            console.log(databack.Repairs[i]);
+                            console.log(databack.Repairs[i].RepairPics);
+                            var state = false
+                            var arrtemp = databack.Repairs[i].RepairPics.join('')
+                            if (arrtemp.length > 0) {
+                                state = true//show
+                            } else {
+                                state = false// hide
+                            }
+
+                            databack.Repairs[i].imgsShow = state
+
+
+                        }
+                        _this.Repairs = databack.Repairs;
                         _this.origin = json
                         _this.MaintenancePics = databack.MaintenancePics
                     }
@@ -994,25 +987,26 @@
                     }
                     _this.origin = json;
                     _this.MaintenancePics = databack.MaintenancePics;
-                    _this.Repairs = databack.Repairs;
-                    console.log("innnnnnn")
 
-                    for (var i = 0; i < _this.Repairs.length; i++) {
-                        console.log( "維修詳情");
-                        console.log(_this.Repairs[i]);
-                        var arrleng = _this.Repairs[i].RepairPics //数组
-                        var state = ''
-                        for (var j = 0; j < arrleng; j++) {
-                            console.log(_this.Repairs[i].RepairPics[j]);
-                            if (_this.Repairs[i].RepairPics[j].length>1) {
-                                console.log(_this.Repairs[i].RepairPics[j]);
-                                state = true
-                            }
+
+                    for (var i = 0; i < databack.Repairs.length; i++) {
+                        console.log("維修詳情");
+                        console.log(databack.Repairs[i]);
+                        console.log(databack.Repairs[i].RepairPics);
+                        var state = false
+                        var arrtemp = databack.Repairs[i].RepairPics.join('')
+                        if (arrtemp.length > 0) {
+                            state = true//show
+                        } else {
+                            state = false// hide
                         }
-                        _this.Repairs[i].imgsShow = state
-                    }
 
-                    console.log(_this.Repairs);
+                        databack.Repairs[i].imgsShow = state
+
+
+                    }
+                    _this.Repairs = databack.Repairs;
+
                 }
             })
             //维修工集合
@@ -1023,9 +1017,13 @@
                     var databack = res.data
                     _this.houxuanren = []
                     for (var i = 0; i < databack.length; i++) {
+                        var name = "（工长）"
                         var s = {
                             id: databack[i].uid,
                             name: databack[i].username,
+                        }
+                        if (databack[i].role == 2) {
+                            s.name = s.name + name
                         }
                         _this.houxuanren.push(s)
                     }
@@ -1174,8 +1172,8 @@
 
     .imgbox {
         display: inline-block;
-        width: 200rpx;
-        height: 200rpx;
+        width: 184rpx;
+        height: 184rpx;
         background: #fff;
         margin: 0 20rpx 0 0;
         position: relative;
@@ -1440,7 +1438,8 @@
 
     .uoloadimgs {
         display: inline-block;
-        width: 150rpx;
+        width: 136rpx;
+        height: 136rpx;
         text-align: center;
         line-height: 107rpx;
         font-size: 78rpx;

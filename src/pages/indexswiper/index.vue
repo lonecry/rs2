@@ -1126,9 +1126,14 @@
 
 
             var from = this.$root.$mp.query.fromreport
+            var frompaidan = this.$root.$mp.query.frompaidan
             if (from == 'yes') {
                 this.current_scroll = 1
             }
+            if(frompaidan=="yes"){
+                this.current_scroll = 2
+            }
+
             console.log('mounted')
             let _this = this;
             let wx = mpvue;
