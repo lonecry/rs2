@@ -219,7 +219,7 @@
                          class="delete">
                 </div>
                 <input type="text" placeholder="备注信息" :value="beizhu" v-model="beizhu"
-                          style="border: 0.5px solid #cacaca;display: block;width: 92%;height: 34px;margin-bottom: 17px;padding: 2px;margin: 0 auto;"/>
+                       style="border: 0.5px solid #cacaca;display: block;width: 92%;height: 34px;margin-bottom: 17px;padding: 2px;margin: 0 auto;"/>
                 <i-button type="success" @click.stop="workerEndcertain" size="small"
                           style="position: relative;left: 0;top: 30rpx;">
                     确认结束
@@ -513,7 +513,7 @@
                 this.peoplepickershow = !this.peoplepickershow
             },
             peosltsure() {
-                this.peoplepickershow = !this.peoplepickershow
+                this.peoplepickershow = !this.peoplepickershoww
             },
             paidanToggle() {
                 this.paidanShow = !this.paidanShow
@@ -531,6 +531,7 @@
             bindPickerChange2: function (e) {
                 console.log('picker发送选择改变，携带值为', e.mp.detail.value)
                 this.index3 = e.mp.detail.value
+
             },
             play: function () {
                 const innerAudioContext = wx.createInnerAudioContext()
@@ -787,7 +788,7 @@
                 console.log(_this.beizhu);
                 console.log(imgsidforload);
                 wx.request({
-                    url: 'https://hd.xmountguan.com/railway/order.aspx?func=update_repair&oid=' + _this.OID + '&uid=' + _this.workerUID + "&repair_status=" + (_this.index3 + 2) + '&repair_pics=' + imgsidforload + '&repair_content=' + _this.beizhu,
+                    url: 'https://hd.xmountguan.com/railway/order.aspx?func=update_repair&oid=' + _this.OID + '&uid=' + _this.workerUID + "&repair_status=" + (parseInt(_this.index3) + 2) + '&repair_pics=' + imgsidforload + '&repair_content=' + _this.beizhu,
                     success(res) {
                         console.log(res.data)
                         _this.finishShow = false;
@@ -807,15 +808,15 @@
                         }
                     }
                 })
-               /* if (imgsidforload !== "" && _this.beizhu !== "") {
+                /* if (imgsidforload !== "" && _this.beizhu !== "") {
 
-                } else {
-                    console.log("确认完成");
-                    $Toast({
-                        content: '请完善信息',
-                        type: 'warning'
-                    });
-                }*/
+                 } else {
+                     console.log("确认完成");
+                     $Toast({
+                         content: '请完善信息',
+                         type: 'warning'
+                     });
+                 }*/
             },
             //确认派单
             paidan() {
