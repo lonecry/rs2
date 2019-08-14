@@ -1,5 +1,5 @@
 {
-    "navigationBarTitleText": "铁路智慧报修系统",
+    "navigationBarTitleText": "铁路智慧维修系统",
     "usingComponents": {
         "i-row": "../../../static/iview/row/index",
         "i-toast": "/static/iview/toast/index",

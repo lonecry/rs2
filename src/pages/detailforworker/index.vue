@@ -199,14 +199,25 @@
                 <img src="/static/images/close.png" class="cardclose" @click="finishToggle">
                 <span class="finishend">维修结束</span>
                 <div class="infos">
-                    <span class="linetitel">维修状态：</span>
-                    <view class="section" style="text-align: right">
-                        <picker @change="bindPickerChange2" :value="index3" :range="finishState">
-                            {{finishState[index3]}} >
-                        </picker>
-                    </view>
+
+
+                    <van-radio-group :value="radio" @change="onChange" style="display: block;overflow: hidden">
+                        <van-radio name="1" style="float: left;margin-left: 11%;margin-right: 10%;" checked-color="#19be6b">已完成</van-radio>
+                        <van-radio name="2" style="float: left;" checked-color="red">不能完成</van-radio>
+                    </van-radio-group>
+
+
+                    <!--
+                                        <span class="linetitel">维修状态：</span>
+                                        <view class="section" style="text-align: right">
+                                            <picker @change="bindPickerChange2" :value="index3" :range="finishState">
+                                                {{finishState[index3]}} >
+                                            </picker>
+                                        </view>-->
+
+
                 </div>
-                <span class="finishtips">*如果维修完成，请上传现场反馈图片。</span>
+
                 <div class="uoloadimgs" :data-upid="index" @click="uploadImg" v-for="(item,index) in upload"
                      :key="index">
                     <span>+</span>
@@ -218,6 +229,7 @@
                     <img v-if="item.show" :data-upid="index" src="/static/images/delete.png" @click.stop='deleteImg'
                          class="delete">
                 </div>
+                <span class="finishtips">如果维修完成，请上传现场反馈图片。</span>
                 <input type="text" placeholder="备注信息" :value="beizhu" v-model="beizhu"
                        style="border: 0.5px solid #cacaca;display: block;width: 92%;height: 34px;margin-bottom: 17px;padding: 2px;margin: 0 auto;"/>
                 <i-button type="success" @click.stop="workerEndcertain" size="small"
@@ -238,6 +250,7 @@
     export default {
         data() {
             return {
+                radio: '0',
                 dingdanfinish: false,
                 UID: '',
                 OID: '',//訂單ID
@@ -247,7 +260,7 @@
                 index2: 0,
                 index3: 0,
                 array: ['修不了', '需要协助'], //“修不了”“需要协助”
-                array2: ['修补了detail', '不能修detail', '不可归我管detail', '其他detail'],    // 时间选择器
+                array2: [],    // 时间选择器
                 minHour: 10,
                 maxHour: 20,
                 minDate: new Date().getTime(),
@@ -269,40 +282,40 @@
                 beizhu: '',
                 detail: {
                     state: 2,
-                    banzu: '一工队',
-                    gongzhang: '张三',
-                    gzcell: '13858585654',
-                    weixiugong: '李四',
-                    wxgcell: '13865656545',
-                    arrivetime: '2019-7-11 08:00',
-                    jubao: '10086',
+                    banzu: '',
+                    gongzhang: '',
+                    gzcell: '',
+                    weixiugong: '',
+                    wxgcell: '',
+                    arrivetime: '',
+                    jubao: '',
                     location: '',
-                    fktype: '水表坏',
-                    fkbeizhu: "水表坏需要更换，没办法维修。",
+                    fktype: '',
+                    fkbeizhu: "",
                     origin: {
-                        danhao: 'WX1245151424',
-                        time: "2019年7月04日 18:44",
-                        name: "张三",
-                        phone: "13854587485",
-                        type: '水电问题',
-                        content: ['度数不转', '水表度数块', '其他问题', '还有问题', '能量不打钩', '旖旎你水电'],
-                        imgsUrl: ['http://www.simpleqq.com/index/imgs/tab/tab4.jpg', "https://www.simpleqq.com/index/imgs/imgdemo.jpg"],
-                        station: "杭州南站",
-                        address: "杭州南站习广场东侧候车厅小隔间大阳台小浴室的拐角的洞洞里",
-                        taidanhao: 'this is off'
+                        danhao: '',
+                        time: "",
+                        name: "",
+                        phone: "",
+                        type: '',
+                        content: [],
+                        imgsUrl: [],
+                        station: "",
+                        address: "",
+                        taidanhao: ''
                     },
                 },
                 origin: {
-                    danhao: 'WX1245151424',
-                    time: "2019年7月04日 18:44",
-                    name: "张三",
-                    phone: "13854587485",
-                    type: '水电问题',
-                    content: ['度数不转', '水表度数块', '其他问题', '还有问题', '能量不打钩', '旖旎你水电'],
-                    imgsUrl: ['http://www.simpleqq.com/index/imgs/tab/tab4.jpg', "https://www.simpleqq.com/index/imgs/imgdemo.jpg"],
-                    station: "杭州南站",
-                    address: "杭州南站习广场东侧候车厅小隔间大阳台小浴室的拐角的洞洞里",
-                    taidanhao: 'this is off'
+                    danhao: '',
+                    time: "",
+                    name: "",
+                    phone: "",
+                    type: '',
+                    content: [],
+                    imgsUrl: [],
+                    station: "",
+                    address: "",
+                    taidanhao: ''
                 },
                 selectIndex: '',
                 judgeShow: false,
@@ -353,6 +366,11 @@
             },
         },
         methods: {
+            onChange(event) {
+                this.radio = event.mp.detail
+                // console.log(event);
+
+            },
             dingdanfinishShow() {
                 console.log('完成关闭订单，并且更新订单')
                 this.finishCertain()
@@ -488,9 +506,7 @@
                 }
                 return value;
             },
-            onChange(e) {
-                console.log(e);
-            },
+
             handleFruitChange: function (e) {
                 var detailvalue = e.mp.detail.value
                 const index = this.peoplecurrent.indexOf(detailvalue);
@@ -513,7 +529,7 @@
                 this.peoplepickershow = !this.peoplepickershow
             },
             peosltsure() {
-                this.peoplepickershow = !this.peoplepickershoww
+                this.peoplepickershow = !this.peoplepickershow
             },
             paidanToggle() {
                 this.paidanShow = !this.paidanShow
@@ -787,27 +803,35 @@
 
                 console.log(_this.beizhu);
                 console.log(imgsidforload);
-                wx.request({
-                    url: 'https://hd.xmountguan.com/railway/order.aspx?func=update_repair&oid=' + _this.OID + '&uid=' + _this.workerUID + "&repair_status=" + (parseInt(_this.index3) + 2) + '&repair_pics=' + imgsidforload + '&repair_content=' + _this.beizhu,
-                    success(res) {
-                        console.log(res.data)
-                        _this.finishShow = false;
-                        if (res.data.success) {
-                            $Toast({
-                                content: '操作成功',
-                                type: 'success',
-                                duration: 2,
-                            });
-                            _this.Repairs[_this.repairIndex].RepairStatus = '维修完毕'
-                            _this.refresh()
-                        } else {
-                            $Toast({
-                                content: '操作失败',
-                                type: 'warning'
-                            });
+                if(_this.radio==0){
+                    $Toast({
+                        content: '请选择维修状态',
+                        type: 'warning'
+                    });
+                }else {
+                    wx.request({
+                        url: 'https://hd.xmountguan.com/railway/order.aspx?func=update_repair&oid=' + _this.OID + '&uid=' + _this.workerUID + "&repair_status=" + (parseInt(_this.radio) + 1) + '&repair_pics=' + imgsidforload + '&repair_content=' + _this.beizhu,
+                        success(res) {
+                            console.log(res.data)
+                            _this.finishShow = false;
+                            if (res.data.success) {
+                                $Toast({
+                                    content: '操作成功',
+                                    type: 'success',
+                                    duration: 2,
+                                });
+                                _this.Repairs[_this.repairIndex].RepairStatus = '维修完毕'
+                                _this.refresh()
+                            } else {
+                                $Toast({
+                                    content: '操作失败',
+                                    type: 'warning'
+                                });
+                            }
                         }
-                    }
-                })
+                    })
+                }
+
                 /* if (imgsidforload !== "" && _this.beizhu !== "") {
 
                  } else {
@@ -1030,6 +1054,13 @@
                     }
                 }
             })
+        },
+        onload(){
+            Object.assign(this.$data, this.$options.data())
+        },
+        onUnload() {
+            console.log('onUnload', this)
+            Object.assign(this.$data, this.$options.data())
         },
 
 
@@ -1435,6 +1466,13 @@
         width: 100%;
         text-align: left;
         font-size: 27rpx;
+        margin-top: -16rpx;
+        display: block;
+        padding: -1 0 0 11rpx;
+        padding-left: 18rpx;
+        margin-bottom: 27rpx;
+        margin-top: -16rpx;
+
     }
 
     .uoloadimgs {
