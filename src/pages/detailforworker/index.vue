@@ -1094,6 +1094,10 @@
         border-bottom: 1rpx solid rgba(222, 222, 222, 0.67);
     }
 
+    .ipts:nth-child(even){
+        background: rgba(246, 255, 213, 0.07);
+    }
+
     .ititle {
         display: block;
         float: left;
