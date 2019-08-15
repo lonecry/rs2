@@ -201,7 +201,7 @@
                 <div class="infos">
 
 
-                    <van-radio-group :value="radio" @change="onChange" style="display: block;overflow: hidden">
+                    <van-radio-group :value="radio" @change="onChange" style="display: block;overflow: hidden;width: 570rpx">
                         <van-radio name="1" style="float: left;margin-left: 11%;margin-right: 10%;" checked-color="#19be6b">已完成</van-radio>
                         <van-radio name="2" style="float: left;" checked-color="red">不能完成</van-radio>
                     </van-radio-group>
