@@ -69,6 +69,7 @@
             <span class="ititle" style="float: none;">详细位置：</span>
             <span class="address addressworker">{{origin.address }}</span>
         </div>
+
         <div class="ipts" v-if="detail.state!=='0'&&detail.state!=='4'"
              style="padding: 10rpx;border: 2rpx dashed  rgba(255,209,119,0.96);box-sizing: border-box;width: 92%;">
             <span>维修详情：</span>
@@ -110,7 +111,10 @@
                <span class="ript">{{origin.taidanhao}}</span>
            </div>
           -->
-        <i-row :class="'buttons'" v-if="peopletype=='gz'&&role==2">
+        <div class="ipts" v-if="OrderType =='反馈单'">
+            <span class="ititle" style="float: none;color: red"> <i-icon type="warning_fill"/> 该订单已经成功反馈 </span>
+        </div>
+        <i-row :class="'buttons'" v-if="peopletype=='gz'&&role==2&&OrderType!=='反馈单'">
             <i-col v-if="detail.state=='0'" :span="16">
                 <i-button type="primary" @click="jiedan">接 单</i-button>
             </i-col>
@@ -201,8 +205,11 @@
                 <div class="infos">
 
 
-                    <van-radio-group :value="radio" @change="onChange" style="display: block;overflow: hidden;width: 570rpx">
-                        <van-radio name="1" style="float: left;margin-left: 11%;margin-right: 10%;" checked-color="#19be6b">已完成</van-radio>
+                    <van-radio-group :value="radio" @change="onChange"
+                                     style="display: block;overflow: hidden;width: 570rpx">
+                        <van-radio name="1" style="float: left;margin-left: 11%;margin-right: 10%;"
+                                   checked-color="#19be6b">已完成
+                        </van-radio>
                         <van-radio name="2" style="float: left;" checked-color="red">不能完成</van-radio>
                     </van-radio-group>
 
@@ -350,6 +357,7 @@
                 finishState: ['已完成', '不能完成'],
                 repairIndex: 0,
                 Repairs: [],
+                OrderType: ''
             }
         },
         computed: {
@@ -428,29 +436,35 @@
                 // this.fankuiShow = true
                 var _this = this
                 var wx = mpvue
+                if (_this.fklyDesc == '') {
+                    $Toast({
+                        content: '请完善反馈描述',
+                        type: 'warning'
+                    });
+                } else {
+                    wx.request({
+                        url: 'https://hd.xmountguan.com/railway/order.aspx?func=update_order&oid=' + this.oid + '&order_status=4' + '&uid=' + wx.getStorageSync("UID") + "&maintenancePics=" + ' ' + '&process=' + _this.fklyDesc,
+                        success(res) {
+                            console.log(res);
+                            if (res.data.success = 'success') {
+                                _this.fankuiShow = false
+                            }
+                            _this.detail.state = 4
 
-                wx.request({
-                    url: 'https://hd.xmountguan.com/railway/order.aspx?func=update_order&oid=' + this.oid + '&order_status=4' + '&uid=' + wx.getStorageSync("UID") + "&maintenancePics=" + ' ' + '&process=' + _this.fklyDesc,
-                    success(res) {
-                        console.log(res);
-                        if (res.data.success = 'success') {
-                            _this.fankuiShow = false
+                            wx.setStorageSync('stateChange', '4');
+                            _this.refresh()
+
+
+                            _this.detail.fkbeizhu = _this.fklyDesc
+                            _this.detail.fktype = _this.array[_this.index]
+
+
+                        },
+                        fail(w) {
+                            console.log(w);
                         }
-                        _this.detail.state = 4
-
-                        wx.setStorageSync('stateChange', '4');
-                        _this.refresh()
-
-
-                        _this.detail.fkbeizhu = _this.fklyDesc
-                        _this.detail.fktype = _this.array[_this.index]
-
-
-                    },
-                    fail(w) {
-                        console.log(w);
-                    }
-                })
+                    })
+                }
 
 
             },
@@ -803,12 +817,12 @@
 
                 console.log(_this.beizhu);
                 console.log(imgsidforload);
-                if(_this.radio==0){
+                if (_this.radio == 0) {
                     $Toast({
                         content: '请选择维修状态',
                         type: 'warning'
                     });
-                }else {
+                } else {
                     wx.request({
                         url: 'https://hd.xmountguan.com/railway/order.aspx?func=update_repair&oid=' + _this.OID + '&uid=' + _this.workerUID + "&repair_status=" + (parseInt(_this.radio) + 1) + '&repair_pics=' + imgsidforload + '&repair_content=' + _this.beizhu,
                         success(res) {
@@ -942,6 +956,7 @@
                         }
                         _this.Repairs = databack.Repairs;
                         _this.origin = json
+                        _this.OrderType = databack.OrderType;
                         _this.MaintenancePics = databack.MaintenancePics
                     }
                 })
@@ -1011,6 +1026,7 @@
                         taidanhao: databack.TaidanNo,
                     }
                     _this.origin = json;
+                    _this.OrderType = databack.OrderType;
                     _this.MaintenancePics = databack.MaintenancePics;
 
 
@@ -1055,7 +1071,7 @@
                 }
             })
         },
-        onload(){
+        onload() {
             Object.assign(this.$data, this.$options.data())
         },
         onUnload() {
@@ -1094,7 +1110,7 @@
         border-bottom: 1rpx solid rgba(222, 222, 222, 0.67);
     }
 
-    .ipts:nth-child(even){
+    .ipts:nth-child(even) {
         background: rgba(246, 255, 213, 0.07);
     }
 

@@ -174,7 +174,9 @@
                  <span v-if="usershow" class="username">{{usserName}}</span>-->
 
                 <img :src="userIcon" class="usericon" @click="changeIcon" alt=""/>
-                <span class="username">{{login?userName:'新用户'}}</span>
+                <span class="username">{{login?userName :'新用户'}}</span>
+                <view v-if="login" class="area">{{DName}}</view>
+                <view v-if="login" class="area">{{WName}}</view>
                 <view v-if="login" style="width: 80%">
                     <!--                    <view class="cz chongzhiPsw" @click="pswreset">-->
                     <!--                        <i-icon type="lock_fill" size="21" color="#ACACAC"/>-->
@@ -237,7 +239,11 @@
                 end2: false,
                 end3: false,
                 end4: false,
-                login: ""
+                login: "",
+                userName: '',
+                DName: '',
+                WName: ''
+
             }
         },
         components: {},
@@ -1129,14 +1135,14 @@
             if (from == 'yes') {
                 this.current_scroll = 1
             }
-            if(frompaidan=="yes"){
+            if (frompaidan == "yes") {
                 this.current_scroll = 2
             }
 
             console.log('mounted')
             let _this = this;
             let wx = mpvue;
-            this.userName = wx.getStorageSync("UserName")
+
             setTimeout(() => {
                 var Role = wx.getStorageSync('Role');
                 console.log("Role" + Role);
@@ -1149,14 +1155,14 @@
             setTimeout(() => {
                 _this.user = wx.getStorageSync("user")
                 _this.login = wx.getStorageSync('UID')
-                console.log(_this.login);
-
-
+                _this.userName = wx.getStorageSync("UserName")
+                _this.DName = wx.getStorageSync("DName")
+                _this.WName = wx.getStorageSync("WName")
                 if (_this.login) {
                     console.log('加载数据')
                     _this.loaddatas()
                 }
-            },1500)
+            }, 1500)
             //roel init
 
 
@@ -1268,6 +1274,14 @@
         margin-top: 20rpx;
         font-size: 28rpx;
         color: #595959;
+    }
+
+    .area {
+        display: block;
+        margin-top: 20rpx;
+        font-size: 28rpx;
+        color: #595959;
+        text-align: left;
     }
 
     .cz {
