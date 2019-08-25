@@ -23,10 +23,10 @@
                         <div :data-cardid="item.listId" :data-cardindex="index"
                              ref="dataNum" @click="cardClick($event,item.listState)" v-for="(item,index) in  lists"
                              :key="index"
-                             :class="[{  bggray  : item.listState==='0' },{  bgyellow  : item.listState==='1' },{  bggreen  : item.listState==='2' },{  bgred  : item.listState==='3' }, 'card']">
+                             :class="[{  bggray  : item.listState==='0' },{  bgyellow  : item.listState==='1' },{  bggreen  : item.listState==='2' },{  bgred  : item.listState==='3' },{  bgblue  : item.listState==='4' }, 'card']">
                             <span class="danhao">报修单号:{{item.listNumber}}</span>
                             <span
-                                :class="[{  gray  : item.listState==='0' },{  yellow  : item.listState==='1' },{  green  : item.listState==='2' },{  red  : item.listState==='3' }, 'state']">{{item.listState==0?"待处理":(item.listState==1?"维修中":(item.listState==2?"已完成":"已中止"))}}</span>
+                                :class="[{  gray  : item.listState==='0' },{  yellow  : item.listState==='1' },{  green  : item.listState==='2' },{  red  : item.listState==='3' }, {  blue  : item.listState==='4' }, 'state']">{{item.listState == 0 ? "待处理" : (item.listState == 1 ? "维修中" : (item.listState == 2 ? "已完成" : (item.listState == 3 ? "已中止" : "反馈中")))}}</span>
                             <div class="listtime">
                                 <i-icon type="time" size="29" color="#ACACAC" class="listicon"/>
                                 <span class="tdetail">{{item.listTime}}</span>
@@ -171,6 +171,36 @@
                     <view v-else class="nodata">暂无数据</view>
                 </scroll-view>
             </swiper-item>
+            <swiper-item class="swiperitem">
+                <!--                <span v-if="refreshicon" class="freshicon"> 刷新中...<i-icon size='14' type="refresh"/></span>-->
+                <scroll-view :scroll-y="scrolly" :style="computedClassObject"
+                             :upper-threshold="'350'"
+                             @scrolltoupper="refresh" @scrolltolower="loadmore5">
+                    <view v-if="lists5.length>0">
+
+                        <div :data-cardid="item.listId" ref="dataNum" :data-cardindex="index"
+                             @click="cardClick($event,item.listState)" v-for="(item,index) in  lists5" :key="index"
+                             :class="['bgblue', 'card']">
+                            <span class="danhao">报修单号:{{item.listNumber}}</span>
+                            <span
+                                :class="[{  gray  : item.listState==='0' },{  yellow  : item.listState==='1' },{  green  : item.listState==='2' },{  red  : item.listState==='3' },{  blue  : item.listState==='4' }, 'state']">反馈中</span>
+                            <div class="listtime">
+                                <i-icon type="time" size="29" color="#ACACAC" class="listicon"/>
+                                <span class="tdetail">{{item.listTime}}</span>
+                            </div>
+                            <div class="listtype">
+                                <i-icon type="setup_fill" size="29" color="#ACACAC" class="listicon"/>
+                                <span class="tdetail">{{item.listType}}</span>
+                            </div>
+                            <div class="listlocation">
+                                <i-icon type="coordinates_fill" size="29" color="#ACACAC" class="listicon"/>
+                                <view class="tdetail">{{item.listLoca}}</view>
+                            </div>
+                        </div>
+                    </view>
+                    <view v-else class="nodata">暂无数据</view>
+                </scroll-view>
+            </swiper-item>
         </swiper>
         <!--<i-button @click="goreport" class="goreport" type="primary">一键报修</i-button>-->
         <i-drawer mode="left" @click="toggleLeft" :visible="showleft" class="i-drawer-mask">
@@ -208,6 +238,8 @@
     </div>
 </template>
 <script>
+
+
     var timeout0 = ''
     var timeout1 = ''
     var timeout2 = ''
@@ -217,7 +249,7 @@
         data() {
             return {
                 refreshicon: false,
-                navtabs: ["全部", "待处理", "维修中", "已完成", "已中止"],
+                navtabs: ["全部", "待处理", "维修中", "已完成", "已中止", '反馈中'],
                 Role: 2,
                 showleft: false,
                 user: "",
@@ -234,16 +266,19 @@
                 lists2: [],
                 lists3: [],
                 lists4: [],
+                lists5: [],
                 page: '1',
                 page1: '1',
                 page2: '1',
                 page3: '1',
                 page4: '1',
+                page5: '1',
                 end: false,
                 end1: false,
                 end2: false,
                 end3: false,
                 end4: false,
+                end5: false,
                 login: "",
                 userName: '',
                 DName: '',
@@ -320,6 +355,8 @@
                                                 statuscode = "2"
                                             } else if (databack[j].OrderStatus == "已中止") {
                                                 statuscode = "3"
+                                            } else if (databack[j].OrderStatus == "反馈中") {
+                                                statuscode = "4"
                                             }
                                             var json = {
                                                 "listId": databack[j].OID,
@@ -369,6 +406,8 @@
                                                         statuscode = "2"
                                                     } else if (databack[j].OrderStatus == "已中止") {
                                                         statuscode = "3"
+                                                    } else if (databack[j].OrderStatus == "反馈中") {
+                                                        statuscode = "4"
                                                     }
                                                     var json = {
                                                         "listId": databack[j].OID,
@@ -416,6 +455,8 @@
                                                         statuscode = "2"
                                                     } else if (databack[j].OrderStatus == "已中止") {
                                                         statuscode = "3"
+                                                    } else if (databack[j].OrderStatus == "反馈中") {
+                                                        statuscode = "4"
                                                     }
                                                     var json = {
                                                         "listId": databack[j].OID,
@@ -463,6 +504,8 @@
                                                         statuscode = "2"
                                                     } else if (databack[j].OrderStatus == "已中止") {
                                                         statuscode = "3"
+                                                    } else if (databack[j].OrderStatus == "反馈中") {
+                                                        statuscode = "4"
                                                     }
                                                     var json = {
                                                         "listId": databack[j].OID,
@@ -481,7 +524,7 @@
                             } else if (_this.current_scroll + 1 == 4) {
                                 console.log("444444444444444")
                                 wx.request({
-                                    url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_user_orders&uid=' + uid + '&orderstatus=4' + '&page=1&pagesize=5', //仅为示例，并非真实的接口地址
+                                    url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_user_orders&uid=' + uid + '&orderstatus=4' + '&page=1&pagesize=' + this.page4 * 5, //仅为示例，并非真实的接口地址
                                     success(res) {
                                         console.log('refreshing data');
                                         // var Things =
@@ -510,6 +553,8 @@
                                                         statuscode = "2"
                                                     } else if (databack[j].OrderStatus == "已中止") {
                                                         statuscode = "3"
+                                                    } else if (databack[j].OrderStatus == "反馈中") {
+                                                        statuscode = "4"
                                                     }
                                                     var json = {
                                                         "listId": databack[j].OID,
@@ -520,6 +565,55 @@
                                                         "listLoca": databack[j].DetailLocation
                                                     }
                                                     _this.lists4.push(json)
+                                                }, i * 100); //这一行将i*1000改为j*1000也行，并不影响
+                                            })();
+                                        }
+                                    }
+                                })
+                            } else if (_this.current_scroll + 1 == 5) {
+                                console.log("555555555555555")
+                                wx.request({
+                                    url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_user_orders&uid=' + uid + '&orderstatus=5' + '&page=1&pagesize=' + this.page5 * 5, //仅为示例，并非真实的接口地址
+                                    success(res) {
+                                        console.log('refreshing data');
+                                        // var Things =
+                                        //
+                                        console.log(res.data)
+                                        var databack = res.data
+                                        var statuscode = ''
+                                        if (databack.length < 5) {
+                                            _this.end5 = true
+                                        } else {
+                                            _this.end5 = false
+                                            _this.page5 = parseInt(_this.page5) + 1
+                                        }
+                                        _this.lists4 = []
+                                        for (var i = 0; i < databack.length; i++) {
+                                            // for(let i = 0 ; i < 2; i++){
+                                            // console.log(databack[i]);
+                                            (function () {
+                                                var j = i;
+                                                setTimeout(function timer() {
+                                                    if (databack[j].OrderStatus == "待处理") {
+                                                        statuscode = "0"
+                                                    } else if (databack[j].OrderStatus == "维修中") {
+                                                        statuscode = "1"
+                                                    } else if (databack[j].OrderStatus == "已完成") {
+                                                        statuscode = "2"
+                                                    } else if (databack[j].OrderStatus == "已中止") {
+                                                        statuscode = "3"
+                                                    } else if (databack[j].OrderStatus == "反馈中") {
+                                                        statuscode = "4"
+                                                    }
+                                                    var json = {
+                                                        "listId": databack[j].OID,
+                                                        "listNumber": databack[j].SerialNo,
+                                                        "listTime": databack[j].CreateTime,
+                                                        "listType": databack[j].MaintenanceType,
+                                                        "listState": statuscode,
+                                                        "listLoca": databack[j].DetailLocation
+                                                    }
+                                                    _this.lists5.push(json)
                                                 }, i * 100); //这一行将i*1000改为j*1000也行，并不影响
                                             })();
                                         }
@@ -559,6 +653,8 @@
                                                         statuscode = "2"
                                                     } else if (databack[j].OrderStatus == "已中止") {
                                                         statuscode = "3"
+                                                    } else if (databack[j].OrderStatus == "反馈中") {
+                                                        statuscode = "4"
                                                     }
                                                     var json = {
                                                         "listId": databack[j].OID,
@@ -577,7 +673,7 @@
                             } else if (_this.current_scroll == 2) {
                                 console.log("222222222222222")
                                 wx.request({
-                                    url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_user_orders&uid=' + uid + '&orderstatus=2' + '&page=1&pagesize=5', //仅为示例，并非真实的接口地址
+                                    url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_user_orders&uid=' + uid + '&orderstatus=2' + '&page=1&pagesize=' + this.page2 * 5, //仅为示例，并非真实的接口地址
                                     success(res) {
                                         console.log('refreshing data');
                                         // var Things =
@@ -606,6 +702,8 @@
                                                         statuscode = "2"
                                                     } else if (databack[j].OrderStatus == "已中止") {
                                                         statuscode = "3"
+                                                    } else if (databack[j].OrderStatus == "反馈中") {
+                                                        statuscode = "4"
                                                     }
                                                     var json = {
                                                         "listId": databack[j].OID,
@@ -653,6 +751,8 @@
                                                         statuscode = "2"
                                                     } else if (databack[j].OrderStatus == "已中止") {
                                                         statuscode = "3"
+                                                    } else if (databack[j].OrderStatus == "反馈中") {
+                                                        statuscode = "4"
                                                     }
                                                     var json = {
                                                         "listId": databack[j].OID,
@@ -671,7 +771,7 @@
                             } else if (_this.current_scroll == 4) {
                                 console.log("444444444444444")
                                 wx.request({
-                                    url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_user_orders&uid=' + uid + '&orderstatus=4' + '&page=1&pagesize=5', //仅为示例，并非真实的接口地址
+                                    url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_user_orders&uid=' + uid + '&orderstatus=4' + '&page=1&pagesize=' + this.page4 * 5, //仅为示例，并非真实的接口地址
                                     success(res) {
                                         console.log('refreshing data');
                                         // var Things =
@@ -700,6 +800,8 @@
                                                         statuscode = "2"
                                                     } else if (databack[j].OrderStatus == "已中止") {
                                                         statuscode = "3"
+                                                    } else if (databack[j].OrderStatus == "反馈中") {
+                                                        statuscode = "4"
                                                     }
                                                     var json = {
                                                         "listId": databack[j].OID,
@@ -710,6 +812,55 @@
                                                         "listLoca": databack[j].DetailLocation
                                                     }
                                                     _this.lists4.push(json)
+                                                }, i * 100); //这一行将i*1000改为j*1000也行，并不影响
+                                            })();
+                                        }
+                                    }
+                                })
+                            } else if (_this.current_scroll == 5) {
+                                console.log("555555555555555")
+                                wx.request({
+                                    url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_user_orders&uid=' + uid + '&orderstatus=5' + '&page=1&pagesize=' + this.page5 * 5, //仅为示例，并非真实的接口地址
+                                    success(res) {
+                                        console.log('refreshing data');
+                                        // var Things =
+                                        //
+                                        console.log(res.data)
+                                        var databack = res.data
+                                        var statuscode = ''
+                                        if (databack.length < 5) {
+                                            _this.end5 = true
+                                        } else {
+                                            _this.end5 = false
+                                            _this.page5 = parseInt(_this.page5) + 1
+                                        }
+                                        _this.lists5 = []
+                                        for (var i = 0; i < databack.length; i++) {
+                                            // for(let i = 0 ; i < 2; i++){
+                                            // console.log(databack[i]);
+                                            (function () {
+                                                var j = i;
+                                                setTimeout(function timer() {
+                                                    if (databack[j].OrderStatus == "待处理") {
+                                                        statuscode = "0"
+                                                    } else if (databack[j].OrderStatus == "维修中") {
+                                                        statuscode = "1"
+                                                    } else if (databack[j].OrderStatus == "已完成") {
+                                                        statuscode = "2"
+                                                    } else if (databack[j].OrderStatus == "已中止") {
+                                                        statuscode = "3"
+                                                    } else if (databack[j].OrderStatus == "反馈中") {
+                                                        statuscode = "4"
+                                                    }
+                                                    var json = {
+                                                        "listId": databack[j].OID,
+                                                        "listNumber": databack[j].SerialNo,
+                                                        "listTime": databack[j].CreateTime,
+                                                        "listType": databack[j].MaintenanceType,
+                                                        "listState": statuscode,
+                                                        "listLoca": databack[j].DetailLocation
+                                                    }
+                                                    _this.lists5.push(json)
                                                 }, i * 100); //这一行将i*1000改为j*1000也行，并不影响
                                             })();
                                         }
@@ -858,6 +1009,12 @@
                 console.log("loadmore4")
                 if (!this.end4) {
                     this.loaddata4(this.page4)
+                }
+            },
+            loadmore5() {
+                console.log("loadmore5")
+                if (!this.end5) {
+                    this.loaddata5(this.page5)
                 }
             },
             loaddata(page) {
@@ -1126,6 +1283,62 @@
                     })
                 }
             },
+            loaddata5(page) {
+                var _this = this;
+                var uid = wx.getStorageSync("UID");
+                if (uid) {
+                    wx.request({
+                        url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_user_orders&uid=' + uid + '&orderstatus=5' + '&page=' + this.page5 + '&pagesize=5', //仅为示例，并非真实的接口地址
+                        success(res) {
+
+                            // var Things =
+                            //
+                            console.log(res.data)
+                            var databack = res.data
+                            var statuscode = ''
+                            if (databack.length < 5) {
+                                _this.end5 = true
+                            } else {
+                                _this.end5 = false
+                                _this.page5 = parseInt(_this.page5) + 1
+                            }
+                            if (timeout0)
+                                clearTimeout(timeout0)
+
+                            for (var i = 0; i < databack.length; i++) {
+                                // for(let i = 0 ; i < 2; i++){
+                                // console.log(databack[i]);
+                                (function () {
+                                    var j = i;
+
+                                    timeout0 = setTimeout(function timer() {
+                                        if (databack[j].OrderStatus == "待处理") {
+                                            statuscode = "0"
+                                        } else if (databack[j].OrderStatus == "维修中") {
+                                            statuscode = "1"
+                                        } else if (databack[j].OrderStatus == "已完成") {
+                                            statuscode = "2"
+                                        } else if (databack[j].OrderStatus == "已中止") {
+                                            statuscode = "3"
+                                        } else if (databack[j].OrderStatus == "反馈中") {
+                                            statuscode = "4"
+                                        }
+                                        var json = {
+                                            "listId": databack[j].OID,
+                                            "listNumber": databack[j].SerialNo,
+                                            "listTime": databack[j].CreateTime,
+                                            "listType": databack[j].MaintenanceType,
+                                            "listState": statuscode,
+                                            "listLoca": databack[j].DetailLocation
+                                        }
+                                        _this.lists5.push(json)
+                                    }, i * 300); //这一行将i*1000改为j*1000也行，并不影响
+                                })();
+                            }
+                        }
+                    })
+                }
+            },
         },
         onload() {
             console.log('on load')
@@ -1202,7 +1415,7 @@
         border: none;
     }
 
-    .graym {
+    .graym,.gray {
         color: gray;
     }
 
@@ -1218,6 +1431,10 @@
 
     .red {
         color: #ed283c;
+    }
+
+    .blue {
+        color: rgb(0, 184, 255);
     }
 
     .bggray {
@@ -1238,6 +1455,11 @@
     .bgred {
         background: rgba(255, 40, 60, 0.1);
         border: 2rpx solid rgba(255, 40, 60, 0.1);
+    }
+
+    .bgblue {
+        background: rgba(0, 240, 255, 0.1);
+        border: 2rpx solid rgba(0, 240, 255, 0.1);
     }
 
     .miantitle {

@@ -17,11 +17,11 @@
             <span class="ititle" style="float: none;">备注:</span>
             <span class="  fkbeizhu">{{detail.fkbeizhu }}</span>
         </div>
-        <div v-if="detail.state==1" class="ipts">
+        <div v-if="detail.state==1||detail.state==2" class="ipts">
             <span class="ititle">维修工:</span>
             <span class="ript">{{origin.weixiugong}}</span>
         </div>
-        <div v-if="detail.state==1" class="ipts">
+        <div v-if="detail.state==1||detail.state==2" class="ipts">
             <span class="ititle">到场时间:</span>
             <span class="ript">{{origin.arrivetime}}</span>
         </div>
@@ -448,7 +448,7 @@
                     });
                 } else {
                     wx.request({
-                        url: 'https://hd.xmountguan.com/railway/order.aspx?func=update_order&oid=' + this.oid + '&order_status=4' + '&uid=' + wx.getStorageSync("UID") + "&maintenancePics=" + ' ' + '&process=' + _this.fklyDesc,
+                        url: 'https://hd.xmountguan.com/railway/order.aspx?func=update_order&oid=' + this.oid + '&order_status=5' + '&uid=' + wx.getStorageSync("UID") + "&maintenancePics=" + ' ' + '&process=' + _this.fklyDesc,
                         success(res) {
                             console.log(res);
                             if (res.data.success = 'success') {
@@ -942,7 +942,7 @@
                             address: databack.DetailLocation,
                             taidanhao: databack.TaidanNo,
                             weixiugong: databack.RepairMan,
-                            arrivetime: databack.DealTime,
+                            arrivetime: databack.Repairs.length>0 ? databack.Repairs[0].AssignTime : '',
                         }
 
                         for (var i = 0; i < databack.Repairs.length; i++) {
@@ -1040,7 +1040,7 @@
                         address: databack.DetailLocation,
                         taidanhao: databack.TaidanNo,
                         weixiugong: databack.RepairMan,
-                        arrivetime: databack.DealTime,
+                        arrivetime: databack.Repairs.length>0 ? databack.Repairs[0].AssignTime : '',
                     }
                     _this.detail.fkbeizhu = databack.Process
                     _this.detail.fktype = ""
