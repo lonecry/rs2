@@ -13,17 +13,17 @@
             <span class="ititle">反馈理由:</span>
             <span class="ript riptcontent">{{detail.fktype}}</span>
         </div>
-        <div v-if="detail.state==3" class="ipts">
+        <div v-if="detail.state==3&&detail.fkbeizhu" class="ipts">
             <span class="ititle" style="float: none;">备注:</span>
             <span class="  fkbeizhu">{{detail.fkbeizhu }}</span>
         </div>
         <div v-if="detail.state==1" class="ipts">
             <span class="ititle">维修工:</span>
-            <span class="ript">{{detail.weixiugong}}</span>
+            <span class="ript">{{origin.weixiugong}}</span>
         </div>
         <div v-if="detail.state==1" class="ipts">
             <span class="ititle">到场时间:</span>
-            <span class="ript">{{detail.arrivetime}}</span>
+            <span class="ript">{{origin.arrivetime}}</span>
         </div>
         <div class="ipts">
             <span class="ititle">报修人姓名:</span>
@@ -45,6 +45,8 @@
             <span class="ititle imgs ">现场图片:</span>
             <div style="margin-left:45rpx;width:auto;">
                 <div class="imgbox" v-for="(item,index) in origin.imgsUrl" :key="index">
+                    <span
+                        style="display:block;width: 100%;height: 100%;text-align: center;line-height:184rpx;background: rgba(0,0,0,0.14)">暂无图片</span>
                     <img :src="item" :mode="'widthFix'" @click='preview(index)' class="slt" alt="缩略图">
                 </div>
             </div>
@@ -322,7 +324,8 @@
                     imgsUrl: [],
                     station: "",
                     address: "",
-                    taidanhao: ''
+                    taidanhao: '',
+                    weixiugong: ''
                 },
                 selectIndex: '',
                 judgeShow: false,
@@ -357,7 +360,9 @@
                 finishState: ['已完成', '不能完成'],
                 repairIndex: 0,
                 Repairs: [],
-                OrderType: ''
+                OrderType: '',
+                clickstate: 0,
+                initurl: ''
             }
         },
         computed: {
@@ -909,7 +914,7 @@
                 console.log(this.$root.$mp.appOptions)
                 console.log(this.$root.$mp.query)
                 wx.request({
-                    url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_pending_detail&oid=' + this.oid,
+                    url: this.initurl + '&oid=' + this.oid,
                     success(res) {
                         var databack = res.data
                         var statusText = databack.OrderStatus
@@ -936,6 +941,8 @@
                             station: databack.Station,
                             address: databack.DetailLocation,
                             taidanhao: databack.TaidanNo,
+                            weixiugong: databack.RepairMan,
+                            arrivetime: databack.DealTime,
                         }
 
                         for (var i = 0; i < databack.Repairs.length; i++) {
@@ -954,6 +961,8 @@
 
 
                         }
+                        _this.detail.fkbeizhu = databack.Process
+                        _this.detail.fktype = ""
                         _this.Repairs = databack.Repairs;
                         _this.origin = json
                         _this.OrderType = databack.OrderType;
@@ -990,13 +999,19 @@
             this.role = wx.getStorageSync('Role');
             var _this = this
             this.oid = this.$root.$mp.query.oid;
+            this.clickstate = this.$root.$mp.query.state;
+            console.log(this.clickstate);
+            this.initurl = "https://hd.xmountguan.com/railway/order.aspx?func=get_pending_detail"
+            if (this.clickstate) {
+                this.initurl = "https://hd.xmountguan.com/railway/order.aspx?func=get_order_detail"
+            }
             this.UID = wx.getStorageSync("UID")
             this.OID = _this.oid
             console.log(this.oid)
             console.log(this.$root.$mp.appOptions)
             console.log(this.$root.$mp.query)
             wx.request({
-                url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_pending_detail&oid=' + this.oid,
+                url: this.initurl + '&oid=' + this.oid,
                 success(res) {
                     var databack = res.data;
                     console.log(databack);
@@ -1024,7 +1039,13 @@
                         station: databack.Station,
                         address: databack.DetailLocation,
                         taidanhao: databack.TaidanNo,
+                        weixiugong: databack.RepairMan,
+                        arrivetime: databack.DealTime,
                     }
+                    _this.detail.fkbeizhu = databack.Process
+                    _this.detail.fktype = ""
+
+
                     _this.origin = json;
                     _this.OrderType = databack.OrderType;
                     _this.MaintenancePics = databack.MaintenancePics;
@@ -1083,19 +1104,21 @@
     }
 </script>
 <style>
-    .gray {
+    .graym, .bggray {
         color: gray;
+
     }
 
-    .yellow {
+
+    .yellow, .bgyellow {
         color: #ff8c2e;
     }
 
-    .green {
+    .green, .bggreen {
         color: green;
     }
 
-    .red {
+    .red, .bgred {
         color: #ed283c;
     }
 

@@ -20,9 +20,10 @@
 
                     <view v-if="lists.length>0">
                         <!---->
-                        <div class="card" :data-cardid="item.listId" :data-cardindex="index"
+                        <div :data-cardid="item.listId" :data-cardindex="index"
                              ref="dataNum" @click="cardClick($event,item.listState)" v-for="(item,index) in  lists"
-                             :key="index">
+                             :key="index"
+                             :class="[{  bggray  : item.listState==='0' },{  bgyellow  : item.listState==='1' },{  bggreen  : item.listState==='2' },{  bgred  : item.listState==='3' }, 'card']">
                             <span class="danhao">报修单号:{{item.listNumber}}</span>
                             <span
                                 :class="[{  gray  : item.listState==='0' },{  yellow  : item.listState==='1' },{  green  : item.listState==='2' },{  red  : item.listState==='3' }, 'state']">{{item.listState==0?"待处理":(item.listState==1?"维修中":(item.listState==2?"已完成":"已中止"))}}</span>
@@ -51,9 +52,10 @@
                     <view v-if="lists1.length>0">
 
 
-                        <div class="card" :data-cardid="item.listId" ref="dataNum" :data-cardindex="index"
+                        <div :data-cardid="item.listId" ref="dataNum" :data-cardindex="index"
                              @click="cardClick($event,item.listState)" v-for="(item,index) in  lists1" :key="index"
-                             v-if="item.listState==0">
+                             v-if="item.listState==0"
+                             :class="[{  bggray  : item.listState==='0' },{  bgyellow  : item.listState==='1' },{  bggreen  : item.listState==='2' },{  bgred  : item.listState==='3' }, 'card']">
                             <span class="danhao">报修单号:{{item.listNumber}}</span>
                             <span
                                 :class="[{  gray  : item.listState==='0' },{  yellow  : item.listState==='1' },{  green  : item.listState==='2' },{  red  : item.listState==='3' }, 'state']">{{item.listState==0?"待处理":(item.listState==1?"维修中":(item.listState==2?"已完成":"已中止"))}}</span>
@@ -82,9 +84,10 @@
                              @scrolltoupper="refresh" @scrolltolower="loadmore2">
                     <view v-if="lists2.length>0">
 
-                        <div class="card" :data-cardid="item.listId" ref="dataNum" :data-cardindex="index"
+                        <div :data-cardid="item.listId" ref="dataNum" :data-cardindex="index"
                              @click="cardClick($event,item.listState)" v-for="(item,index) in  lists2" :key="index"
-                             v-if="item.listState==1">
+                             v-if="item.listState==1"
+                             :class="[{  bggray  : item.listState==='0' },{  bgyellow  : item.listState==='1' },{  bggreen  : item.listState==='2' },{  bgred  : item.listState==='3' }, 'card']">
                             <span class="danhao">报修单号:{{item.listNumber}}</span>
                             <span
                                 :class="[{  gray  : item.listState==='0' },{  yellow  : item.listState==='1' },{  green  : item.listState==='2' },{  red  : item.listState==='3' }, 'state']">{{item.listState==0?"待处理":(item.listState==1?"维修中":(item.listState==2?"已完成":"已中止"))}}</span>
@@ -113,9 +116,10 @@
                     <view v-if="lists3.length>0">
 
 
-                        <div class="card" :data-cardid="item.listId" ref="dataNum" :data-cardindex="index"
+                        <div :data-cardid="item.listId" ref="dataNum" :data-cardindex="index"
                              @click="cardClick($event,item.listState)" v-for="(item,index) in  lists3" :key="index"
-                             v-if="item.listState==2">
+                             v-if="item.listState==2"
+                             :class="[{  bggray  : item.listState==='0' },{  bgyellow  : item.listState==='1' },{  bggreen  : item.listState==='2' },{  bgred  : item.listState==='3' }, 'card']">
                             <span class="danhao">报修单号:{{item.listNumber}}</span>
                             <span
                                 :class="[{  gray  : item.listState==='0' },{  yellow  : item.listState==='1' },{  green  : item.listState==='2' },{  red  : item.listState==='3' }, 'state']">{{item.listState==0?"待处理":(item.listState==1?"维修中":(item.listState==2?"已完成":"已中止"))}}</span>
@@ -143,9 +147,10 @@
                              @scrolltoupper="refresh" @scrolltolower="loadmore4">
                     <view v-if="lists4.length>0">
 
-                        <div class="card" :data-cardid="item.listId" ref="dataNum" :data-cardindex="index"
+                        <div :data-cardid="item.listId" ref="dataNum" :data-cardindex="index"
                              @click="cardClick($event,item.listState)" v-for="(item,index) in  lists4" :key="index"
-                             v-if="item.listState==3">
+                             v-if="item.listState==3"
+                             :class="[{  bggray  : item.listState==='0' },{  bgyellow  : item.listState==='1' },{  bggreen  : item.listState==='2' },{  bgred  : item.listState==='3' }, 'card']">
                             <span class="danhao">报修单号:{{item.listNumber}}</span>
                             <span
                                 :class="[{  gray  : item.listState==='0' },{  yellow  : item.listState==='1' },{  green  : item.listState==='2' },{  red  : item.listState==='3' }, 'state']">{{item.listState==0?"待处理":(item.listState==1?"维修中":(item.listState==2?"已完成":"已中止"))}}</span>
@@ -286,7 +291,7 @@
                     if (_this.current_scroll == 0) {
                         console.log("00000000000000")
                         wx.request({
-                            url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_user_orders&uid=' + uid + '&orderstatus=0' + '&page=1&pagesize=5', //仅为示例，并非真实的接口地址
+                            url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_user_orders&uid=' + uid + '&orderstatus=0' + '&page=1&pagesize=' + this.page * 5, //仅为示例，并非真实的接口地址
                             success(res) {
                                 console.log('refreshing data');
                                 // var Things =
@@ -741,12 +746,13 @@
             cardClick(e, clcikstate) {
                 // console.log(e.currentTarget.dataset.cardid);
                 console.log(e);
+                console.log(clcikstate);
                 console.log("cardid is " + e.mp.currentTarget.dataset.cardid);
                 console.log("cardidindex is " + e.mp.currentTarget.dataset.cardindex);
                 wx.setStorageSync('cardinex', e.mp.currentTarget.dataset.cardindex);
                 mpvue.navigateTo({
                     // url: '../detailforworker/main',
-                    url: '../detailforworker/main?oid=' + e.mp.currentTarget.dataset.cardid,
+                    url: '../detailforworker/main?oid=' + e.mp.currentTarget.dataset.cardid + '&state=' + clcikstate,
                 })
             },
             change(e) {
@@ -1196,13 +1202,15 @@
         border: none;
     }
 
-    .gray {
+    .graym {
         color: gray;
     }
+
 
     .yellow {
         color: #ff8c2e;
     }
+
 
     .green {
         color: green;
@@ -1210,6 +1218,26 @@
 
     .red {
         color: #ed283c;
+    }
+
+    .bggray {
+        background: rgba(128, 128, 128, 0.11);
+        border: 2rpx solid rgba(128, 128, 128, 0.53);
+    }
+
+    .bgyellow {
+        background: rgba(255, 140, 46, 0.16);
+        border: 2rpx solid rgba(255, 140, 46, 0.16);
+    }
+
+    .bggreen {
+        background: rgba(0, 128, 0, 0.16);
+        border: 2rpx solid rgba(0, 128, 0, 0.16);
+    }
+
+    .bgred {
+        background: rgba(255, 40, 60, 0.1);
+        border: 2rpx solid rgba(255, 40, 60, 0.1);
     }
 
     .miantitle {
@@ -1304,11 +1332,11 @@
         /*background: #595959;*/
         margin: 0 auto;
         margin-bottom: 10rpx;
-        border: 1rpx solid rgba(128, 128, 128, 0.53);
+        /*border: 1rpx solid rgba(128, 128, 128, 0.53);*/
         position: relative;
         border-radius: 10rpx;
         -webkit-border-radius: 10rpx;
-        background: white;
+        /*background: white;*/
         position: relative;
     }
 
