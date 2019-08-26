@@ -9,19 +9,19 @@
             <span
                 :class="[{  gray  : detail.state=='0' },{  yellow  : detail.state=='1' },{  green  : detail.state=='2' },{  red  : detail.state=='3' }, 'ript']">{{detail.state==0?"待处理":(detail.state==1?"维修中":(detail.state==2?"已完成":"已中止"))}}</span>
         </div>
-        <div v-if="detail.state==3" class="ipts">
+        <div v-if="detail.fktype&&detail.state ==4" class="ipts">
             <span class="ititle">反馈理由:</span>
             <span class="ript riptcontent">{{detail.fktype}}</span>
         </div>
-        <div v-if="detail.state==3&&detail.fkbeizhu" class="ipts">
+        <div v-if="detail.fkbeizhu&&detail.state ==4" class="ipts">
             <span class="ititle" style="float: none;">备注:</span>
             <span class="  fkbeizhu">{{detail.fkbeizhu }}</span>
         </div>
-        <div v-if="detail.state==1||detail.state==2" class="ipts">
+        <div v-if="origin.weixiugong" class="ipts">
             <span class="ititle">维修工:</span>
             <span class="ript">{{origin.weixiugong}}</span>
         </div>
-        <div v-if="detail.state==1||detail.state==2" class="ipts">
+        <div v-if="origin.arrivetime" class="ipts">
             <span class="ititle">到场时间:</span>
             <span class="ript">{{origin.arrivetime}}</span>
         </div>
@@ -45,9 +45,10 @@
             <span class="ititle imgs ">现场图片:</span>
             <div style="margin-left:45rpx;width:auto;">
                 <div class="imgbox" v-for="(item,index) in origin.imgsUrl" :key="index">
-                    <span
-                        style="display:block;width: 100%;height: 100%;text-align: center;line-height:184rpx;background: rgba(0,0,0,0.14)">暂无图片</span>
-                    <img :src="item" :mode="'widthFix'" @click='preview(index)' class="slt" alt="缩略图">
+                    <img v-if="item" :src="item" :mode="'widthFix'" @click='preview(index)' class="slt" alt="缩略图">
+
+                    <span v-else
+                          style="display:block;width: 100%;height: 100%;text-align: center;line-height:184rpx;background: rgba(0,0,0,0.14)">暂无图片</span>
                 </div>
             </div>
         </div>
@@ -168,7 +169,7 @@
             <view class="fankuicard">
                 <img src="/static/images/close.png" class="cardclose" @click="fankuiToggle">
                 <span class="cardtitle">反馈</span>
-                <span class="fklytxt">*反馈理由</span>
+                <span class="fklytxt">*请选择反馈理由</span>
                 <view class="section">
                     <view class="reasons">
                         <picker @change="bindPickerChange" :value="index" :range="array">
@@ -448,7 +449,7 @@
                     });
                 } else {
                     wx.request({
-                        url: 'https://hd.xmountguan.com/railway/order.aspx?func=update_order&oid=' + this.oid + '&order_status=5' + '&uid=' + wx.getStorageSync("UID") + "&maintenancePics=" + ' ' + '&process=' + _this.fklyDesc,
+                        url: 'https://hd.xmountguan.com/railway/order.aspx?func=update_order&oid=' + this.oid + '&order_status=5' + '&uid=' + wx.getStorageSync("UID") + "&maintenancePics=" + ' ' + '&process=' + _this.fklyDesc + "&feedbackreason=" + _this.array[_this.index],
                         success(res) {
                             console.log(res);
                             if (res.data.success = 'success') {
@@ -456,7 +457,7 @@
                             }
                             _this.detail.state = 4
 
-                            wx.setStorageSync('stateChange', '4');
+                            wx.setStorageSync('stateChange', '5');
                             _this.refresh()
 
 
@@ -928,6 +929,8 @@
                             _this.detail.state = "2"
                         } else if (statusText == "已中止") {
                             _this.detail.state = "3"
+                        } else if (statusText == "反馈中") {
+                            _this.detail.state = "4"
                         }
                         var json = {
                             statuscode: statuscode,
@@ -942,7 +945,7 @@
                             address: databack.DetailLocation,
                             taidanhao: databack.TaidanNo,
                             weixiugong: databack.RepairMan,
-                            arrivetime: databack.Repairs.length>0 ? databack.Repairs[0].AssignTime : '',
+                            arrivetime: databack.Repairs.length > 0 ? databack.Repairs[0].AssignTime : '',
                         }
 
                         for (var i = 0; i < databack.Repairs.length; i++) {
@@ -962,7 +965,8 @@
 
                         }
                         _this.detail.fkbeizhu = databack.Process
-                        _this.detail.fktype = ""
+                        _this.detail.fktype = databack.FeedbackReason
+
                         _this.Repairs = databack.Repairs;
                         _this.origin = json
                         _this.OrderType = databack.OrderType;
@@ -1026,6 +1030,8 @@
                         _this.detail.state = "2"
                     } else if (statusText == "已中止") {
                         _this.detail.state = "3"
+                    } else if (statusText == "反馈中") {
+                        _this.detail.state = "4"
                     }
                     var json = {
                         statuscode: statuscode,
@@ -1040,10 +1046,10 @@
                         address: databack.DetailLocation,
                         taidanhao: databack.TaidanNo,
                         weixiugong: databack.RepairMan,
-                        arrivetime: databack.Repairs.length>0 ? databack.Repairs[0].AssignTime : '',
+                        arrivetime: databack.Repairs.length > 0 ? databack.Repairs[0].AssignTime : '',
                     }
                     _this.detail.fkbeizhu = databack.Process
-                    _this.detail.fktype = ""
+                    _this.detail.fktype = databack.FeedbackReason
 
 
                     _this.origin = json;
@@ -1088,6 +1094,18 @@
                             s.name = s.name + name
                         }
                         _this.houxuanren.push(s)
+                    }
+                }
+            })
+            //反馈理由
+            wx.request({
+                url: 'https://hd.xmountguan.com/railway/m.aspx?func=get_reason_temple_list',
+                success(res) {
+                    console.log(res.data)
+                    var databack = res.data
+                    _this.array = []
+                    for (var i = 0; i < databack.length; i++) {
+                        _this.array.push(databack[i].ReasonTemple)
                     }
                 }
             })
@@ -1249,7 +1267,7 @@
         display: inline-block;
         width: 184rpx;
         height: 184rpx;
-        background: #fff;
+        background: #c6c6c6;
         margin: 0 20rpx 0 0;
         position: relative;
         overflow: hidden;
@@ -1403,17 +1421,17 @@
     }
 
     .picker {
-        width: 190rpx;
+        width: 450rpx;
         height: 50rpx;
         line-height: 50rpx;
         text-align: center;
         font-size: 28rpx;
         border: 1rpx solid #0064fa;
         color: #0064fa;
-        /*margin-left   : 30rpx;*/
         border-radius: 10rpx;
         display: inline-block;
         float: left;
+
     }
 
     .picker2 {
