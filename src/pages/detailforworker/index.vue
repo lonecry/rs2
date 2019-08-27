@@ -101,6 +101,10 @@
                         </div>
                     </div>
                 </div>
+                <div class="lists">
+                    <span class="listsleft">维修备注：</span>
+                    <span class="listsright" style="height: auto;text-align: justify">{{item.RepairContent}}</span>
+                </div>
                 <i-button type="info" v-if="item.RepairStatus =='维修中'&&UID==item.UID&&detail.state =='1'"
                           :data-index="index" :data-uid="item.UID" size="small" style="display: block;margin-top: 60rpx"
                           @click=
