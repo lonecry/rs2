@@ -197,21 +197,38 @@
         position   : relative;
     }
     .ipt {
-        width         : 100%;
-        height        : 80rpx;
-        line-height   : 80rpx;
-        font-size     : 22rpx;
-        background    : white;
-        border-radius : 18rpx;
-        text-align    : left;
-        border        : 1rpx solid #b1b1b1;
-        position      : relative;
-        margin-bottom : 50rpx;
+        width: 100%;
+        height: 75rpx;
+        line-height: 75rpx;
+        font-size: 22rpx;
+        background: white;
+        border-radius: 18rpx;
+        text-align: left;
+        border: 1rpx solid #b1b1b1;
+        position: relative;
+        margin-bottom: 50rpx;
+
+
+    }
+
+    .ipt input {
+        width: 88%;
+        height: 75rpx;
+        margin-left: 12%;
+        line-height: 75rpx;
+        display: block;
+        font-size: 25rpx;
+
+
     }
     .ipt .usercell, .ipt .password {
-        width       : 88%;
-        height      : 100%;
-        margin-left : 12%;
+        width: 88%;
+        height: 75rpx;
+        margin-left: 12%;
+        line-height: 75rpx;
+        display: block;
+        font-size: 25rpx;
+
     }
     .usercell {
         color : #80848f;

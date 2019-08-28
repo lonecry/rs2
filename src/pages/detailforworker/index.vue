@@ -7,7 +7,7 @@
         <div class="ipts">
             <span class="ititle">状态</span>
             <span
-                :class="[{  gray  : detail.state=='0' },{  yellow  : detail.state=='1' },{  green  : detail.state=='2' },{  red  : detail.state=='3' }, 'ript']">{{detail.state==0?"待处理":(detail.state==1?"维修中":(detail.state==2?"已完成":"已中止"))}}</span>
+                :class="[{  gray  : detail.state=='0' },{  yellow  : detail.state=='1' },{  green  : detail.state=='2' },{  red  : detail.state=='3' },{  blue  : detail.state==='4' }, 'ript']"> {{detail.state == 0 ? "待处理" : (detail.state == 1 ? "维修中" : (detail.state == 2 ? "已完成" : (detail.state == 3 ? "已中止" : "反馈中")))}}</span>
         </div>
         <div v-if="detail.fktype&&detail.state ==4" class="ipts">
             <span class="ititle">反馈理由:</span>
@@ -72,12 +72,14 @@
             <span class="ititle" style="float: none;">详细位置：</span>
             <span class="address addressworker">{{origin.address }}</span>
         </div>
+
         <div class="ipts">
             <span class="ititle">台单号：</span>
-            <span class="ript">{{origin.taidanhao}}</span>
+            <span class="ript">{{origin.taidanhao?origin.taidanhao:'空'}}</span>
         </div>
+
         <div class="ipts" v-if="detail.state!=='0'&&detail.state!=='4'"
-             style="padding: 10rpx;border: 2rpx dashed  rgba(255,209,119,0.96);box-sizing: border-box;width: 92%;margin-top: 22rpx;">
+             style="padding: 10rpx;border: 2rpx dashed  rgba(255,209,119,0.96);box-sizing: border-box;width: 92%;margin-top: 20rpx;">
             <span>维修详情：</span>
             <div class="weixiug" v-for="(item,index) in  Repairs" :key="item.RPID">
                 <div class="lists">
@@ -103,10 +105,10 @@
                                  class="slt" alt="缩略图">
                         </div>
                     </div>
-                </div>
-                <div class="lists">
-                    <span class="listsleft">维修备注：</span>
-                    <span class="listsright" style="height: auto;text-align: justify">{{item.RepairContent}}</span>
+                    <div class="lists">
+                        <span class="listsleft">维修备注：</span>
+                        <span class="listsright" style="height: auto;text-align: justify">{{item.RepairContent}}</span>
+                    </div>
                 </div>
                 <i-button type="info" v-if="item.RepairStatus =='维修中'&&UID==item.UID&&detail.state =='1'"
                           :data-index="index" :data-uid="item.UID" size="small" style="display: block;margin-top: 60rpx"
@@ -116,6 +118,13 @@
                 </i-button>
             </div>
         </div>
+
+        <!-- <span class="bxlist" v-if="ratealready&& detail.state!=='3'"><span class="spans inspan">满意度:</span> {{ratetxt}}
+                 <van-rate count="3" size="20" :value="ratecode"
+                           style="width: 50%;display: inline-block;position: relative;top: 14rpx;"
+                 /></span>
+ -->
+
 
         <div class="ipts" v-if="OrderType =='反馈单'">
             <span class="ititle" style="float: none;color: red"> <i-icon type="warning_fill"/> 该订单已经成功反馈 </span>
@@ -187,7 +196,7 @@
                         <!--</picker>-->
                     </view>
                 </view>
-                <span class="fklytxt">备注</span>
+                <span class="fklytxt">备注(选填)</span>
                 <textarea v-if="fankuiShow" class="fklyDesc" @touchmove.prevent="" v-model="fklyDesc" type="textarea"
                           maxlength="200" autofocus placeholder="  输入备注内容（200字内）"></textarea>
                 <!-- <span class = "fklytxt">录音汇报</span>
@@ -445,9 +454,9 @@
                 // this.fankuiShow = true
                 var _this = this
                 var wx = mpvue
-                if (_this.fklyDesc == '') {
+                if (_this.array[_this.index] == "请选择反馈类型") {
                     $Toast({
-                        content: '请完善反馈描述',
+                        content: '请选择反馈类型',
                         type: 'warning'
                     });
                 } else {
@@ -474,6 +483,16 @@
                         }
                     })
                 }
+
+
+                /* if (_this.fklyDesc == '') {   //
+                     $Toast({
+                         content: '请完善反馈描述',
+                         type: 'warning'
+                     });
+                 } else {
+
+                 }*/
 
 
             },
@@ -1107,6 +1126,7 @@
                     console.log(res.data)
                     var databack = res.data
                     _this.array = []
+                    _this.array.push('请选择反馈类型')
                     for (var i = 0; i < databack.length; i++) {
                         _this.array.push(databack[i].ReasonTemple)
                     }
@@ -1141,6 +1161,9 @@
 
     .red, .bgred {
         color: #ed283c;
+    }
+    .blue {
+        color: rgb(0, 184, 255);
     }
 
     .ipts {

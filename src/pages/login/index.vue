@@ -190,8 +190,8 @@
 
     .ipt {
         width: 100%;
-        height: 60rpx;
-        line-height: 60rpx;
+        height: 75rpx;
+        line-height: 75rpx;
         font-size: 22rpx;
         background: white;
         border-radius: 18rpx;
@@ -200,12 +200,17 @@
         position: relative;
         margin-bottom: 50rpx;
 
+
     }
 
     .ipt input {
         width: 88%;
-        height: 100%;
+        height: 75rpx;
         margin-left: 12%;
+        line-height: 75rpx;
+        display: block;
+        font-size: 25rpx;
+
 
     }
 
@@ -257,17 +262,18 @@
 
     .getcode {
         width: 185rpx;
-        height: 54rpx;
+        height: 66rpx;
         display: block;
         float: right;
         position: absolute;
         top: 4rpx;
         right: 10rpx;
         background: #2d8cf0;
-        line-height: 54rpx;
+        line-height: 65rpx;
         color: white;
-         font-size: 26rpx;
+        font-size: 26rpx;
         padding: 0;
         box-sizing: border-box;
-}
+
+    }
 </style>
