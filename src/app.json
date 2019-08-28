@@ -7,8 +7,7 @@
         "pages/changecell2/main",
         "pages/changecell1/main",
         "pages/pswreset/main",
-        "pages/register/main",
-        "pages/logs/main"
+        "pages/register/main"
     ],
     "window": {
         "backgroundTextStyle": "light",

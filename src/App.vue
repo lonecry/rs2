@@ -1,7 +1,6 @@
 <script>
     export default {
         created(){
-
         },
         log(){
             console.log(`log at:${Date.now()}`)
@@ -29,11 +28,10 @@
                     }
                 })
             },
-            getAccess    : function(){   //获取用户信息接口  这个可以直接获取。不需要授权
+            getAccess    : function(code){   //获取用户信息接口  这个可以直接获取。不需要授权
                 var that = this;
                 var  wx=mpvue
-                that.getOpenid().then((json) =>{
-
+                that.getOpenid(code).then((json) =>{
                     if(json.UID>0){
                         wx.setStorageSync('login','user has already login')
                     }else {
@@ -55,10 +53,11 @@
                     })
                 })
             },
-            getOpenid    : function(){
+            getOpenid    : function(code){
                 var pms = new Promise((resolve,reject) =>{
                     wx.request({
                         url    : 'https://hd.xmountguan.com/railway/i_getopenid_weixiu.aspx?code=' + wx.getStorageSync("code"),
+                        url    : 'https://hd.xmountguan.com/railway/i_getopenid_weixiu.aspx?code=' + code,
                         method : 'GET',
                         success: function(rlt){
                             console.log(rlt.data);
@@ -175,9 +174,9 @@
                 wx.login({
                     success: function(res){
                         // console.log(res);
-                        console.log("code :" + res.code);
-                        wx.setStorageSync("code",res.code)
-                        that.getAccess() //获取openId
+                        // console.log("code :" + res.code);
+                        // wx.setStorageSync("code",res.code)
+                        that.getAccess(res.code) //获取openId
                     },fail : function(){
                         wx.showToast({
                             title   : "当前网络请求失败！",

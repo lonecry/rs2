@@ -25,8 +25,9 @@
                              :key="index"
                              :class="[{  bggray  : item.listState==='0' },{  bgyellow  : item.listState==='1' },{  bggreen  : item.listState==='2' },{  bgred  : item.listState==='3' },{  bgblue  : item.listState==='4' }, 'card']">
                             <span class="danhao">报修单号:{{item.listNumber}}</span>
+
                             <span
-                                :class="[{  gray  : item.listState==='0' },{  yellow  : item.listState==='1' },{  green  : item.listState==='2' },{  red  : item.listState==='3' }, {  blue  : item.listState==='4' }, 'state']">{{item.listState == 0 ? "待处理" : (item.listState == 1 ? "维修中" : (item.listState == 2 ? "已完成" : (item.listState == 3 ? "已中止" : "反馈中")))}}</span>
+                                :class="[{  gray  : item.listState==='0' },{  yellow  : item.listState==='1' },{  green  : item.listState==='2' },{  red  : item.listState==='3' }, {  blue  : item.listState==='4' }, 'state']">{{item.listState == 0 ? "待处理" : (item.listState == 1 ? "维修中" : (item.listState == 2 ? "已完成" : (item.listState == 3 ? "已中止" : "反馈中")))}}<span v-if="item.onfinish">-部分完成</span></span>
                             <div class="listtime">
                                 <i-icon type="time" size="29" color="#ACACAC" class="listicon"/>
                                 <span class="tdetail">{{item.listTime}}</span>
@@ -58,7 +59,7 @@
                              :class="[{  bggray  : item.listState==='0' },{  bgyellow  : item.listState==='1' },{  bggreen  : item.listState==='2' },{  bgred  : item.listState==='3' }, 'card']">
                             <span class="danhao">报修单号:{{item.listNumber}}</span>
                             <span
-                                :class="[{  gray  : item.listState==='0' },{  yellow  : item.listState==='1' },{  green  : item.listState==='2' },{  red  : item.listState==='3' }, 'state']">{{item.listState==0?"待处理":(item.listState==1?"维修中":(item.listState==2?"已完成":"已中止"))}}</span>
+                                :class="[{  gray  : item.listState==='0' },{  yellow  : item.listState==='1' },{  green  : item.listState==='2' },{  red  : item.listState==='3' }, 'state']">{{item.listState==0?"待处理":(item.listState==1?"维修中":(item.listState==2?"已完成":"已中止"))}}<span v-if="item.onfinish">-部分完成</span></span>
                             <div class="listtime">
                                 <i-icon type="time" size="29" color="#ACACAC" class="listicon"/>
                                 <span class="tdetail">{{item.listTime}}</span>
@@ -90,7 +91,7 @@
                              :class="[{  bggray  : item.listState==='0' },{  bgyellow  : item.listState==='1' },{  bggreen  : item.listState==='2' },{  bgred  : item.listState==='3' }, 'card']">
                             <span class="danhao">报修单号:{{item.listNumber}}</span>
                             <span
-                                :class="[{  gray  : item.listState==='0' },{  yellow  : item.listState==='1' },{  green  : item.listState==='2' },{  red  : item.listState==='3' }, 'state']">{{item.listState==0?"待处理":(item.listState==1?"维修中":(item.listState==2?"已完成":"已中止"))}}</span>
+                                :class="[{  gray  : item.listState==='0' },{  yellow  : item.listState==='1' },{  green  : item.listState==='2' },{  red  : item.listState==='3' }, 'state']">{{item.listState==0?"待处理":(item.listState==1?"维修中":(item.listState==2?"已完成":"已中止"))}}<span v-if="item.onfinish">-部分完成</span></span>
                             <div class="listtime">
                                 <i-icon type="time" size="29" color="#ACACAC" class="listicon"/>
                                 <span class="tdetail">{{item.listTime}}</span>
@@ -121,8 +122,9 @@
                              v-if="item.listState==2"
                              :class="[{  bggray  : item.listState==='0' },{  bgyellow  : item.listState==='1' },{  bggreen  : item.listState==='2' },{  bgred  : item.listState==='3' }, 'card']">
                             <span class="danhao">报修单号:{{item.listNumber}}</span>
+                            <span></span>
                             <span
-                                :class="[{  gray  : item.listState==='0' },{  yellow  : item.listState==='1' },{  green  : item.listState==='2' },{  red  : item.listState==='3' }, 'state']">{{item.listState==0?"待处理":(item.listState==1?"维修中":(item.listState==2?"已完成":"已中止"))}}</span>
+                                :class="[{  gray  : item.listState==='0' },{  yellow  : item.listState==='1' },{  green  : item.listState==='2' },{  red  : item.listState==='3' }, 'state']">{{item.listState==0?"待处理":(item.listState==1?"维修中":(item.listState==2?"已完成":"已中止"))}}<span v-if="item.onfinish">-部分完成</span></span>
                             <div class="listtime">
                                 <i-icon type="time" size="29" color="#ACACAC" class="listicon"/>
                                 <span class="tdetail">{{item.listTime}}</span>
@@ -153,7 +155,7 @@
                              :class="[{  bggray  : item.listState==='0' },{  bgyellow  : item.listState==='1' },{  bggreen  : item.listState==='2' },{  bgred  : item.listState==='3' }, 'card']">
                             <span class="danhao">报修单号:{{item.listNumber}}</span>
                             <span
-                                :class="[{  gray  : item.listState==='0' },{  yellow  : item.listState==='1' },{  green  : item.listState==='2' },{  red  : item.listState==='3' }, 'state']">{{item.listState==0?"待处理":(item.listState==1?"维修中":(item.listState==2?"已完成":"已中止"))}}</span>
+                                :class="[{  gray  : item.listState==='0' },{  yellow  : item.listState==='1' },{  green  : item.listState==='2' },{  red  : item.listState==='3' }, 'state']">{{item.listState==0?"待处理":(item.listState==1?"维修中":(item.listState==2?"已完成":"已中止"))}}<span v-if="item.onfinish">-部分完成</span></span>
                             <div class="listtime">
                                 <i-icon type="time" size="29" color="#ACACAC" class="listicon"/>
                                 <span class="tdetail">{{item.listTime}}</span>
@@ -183,7 +185,7 @@
                              :class="['bgblue', 'card']">
                             <span class="danhao">报修单号:{{item.listNumber}}</span>
                             <span
-                                :class="[{  gray  : item.listState==='0' },{  yellow  : item.listState==='1' },{  green  : item.listState==='2' },{  red  : item.listState==='3' },{  blue  : item.listState==='4' }, 'state']">反馈中</span>
+                                :class="[{  gray  : item.listState==='0' },{  yellow  : item.listState==='1' },{  green  : item.listState==='2' },{  red  : item.listState==='3' },{  blue  : item.listState==='4' }, 'state']">反馈中<span v-if="item.onfinish">-部分完成</span></span>
                             <div class="listtime">
                                 <i-icon type="time" size="29" color="#ACACAC" class="listicon"/>
                                 <span class="tdetail">{{item.listTime}}</span>
@@ -328,12 +330,13 @@
                         wx.request({
                             url: 'https://hd.xmountguan.com/railway/order.aspx?func=get_user_orders&uid=' + uid + '&orderstatus=0' + '&page=1&pagesize=' + this.page * 5, //仅为示例，并非真实的接口地址
                             success(res) {
-                                console.log('refreshing data');
+                                // console.log('refreshing data');
                                 // var Things =
                                 //
-                                console.log(res.data)
+                                // console.log(res.data)
                                 var databack = res.data
                                 var statuscode = ''
+                                var onfinish = false
                                 if (databack.length < 5) {
                                     _this.end = true
                                 } else {
@@ -351,6 +354,9 @@
                                                 statuscode = "0"
                                             } else if (databack[j].OrderStatus == "维修中") {
                                                 statuscode = "1"
+                                            } else if (databack[j].OrderStatus == "维修中-部分完成") {
+                                                statuscode = "1"
+                                                onfinish = true
                                             } else if (databack[j].OrderStatus == "已完成") {
                                                 statuscode = "2"
                                             } else if (databack[j].OrderStatus == "已中止") {
@@ -359,6 +365,7 @@
                                                 statuscode = "4"
                                             }
                                             var json = {
+                                                onfinish: onfinish,
                                                 "listId": databack[j].OID,
                                                 "listNumber": databack[j].SerialNo,
                                                 "listTime": databack[j].CreateTime,
@@ -385,6 +392,7 @@
                                         console.log(res.data)
                                         var databack = res.data
                                         var statuscode = ''
+                                        var onfinish = false
                                         if (databack.length < 5) {
                                             _this.end1 = true
                                         } else {
@@ -402,6 +410,9 @@
                                                         statuscode = "0"
                                                     } else if (databack[j].OrderStatus == "维修中") {
                                                         statuscode = "1"
+                                                    } else if (databack[j].OrderStatus == "维修中-部分完成") {
+                                                        statuscode = "1"
+                                                        onfinish = true
                                                     } else if (databack[j].OrderStatus == "已完成") {
                                                         statuscode = "2"
                                                     } else if (databack[j].OrderStatus == "已中止") {
@@ -410,6 +421,7 @@
                                                         statuscode = "4"
                                                     }
                                                     var json = {
+                                                        onfinish: onfinish,
                                                         "listId": databack[j].OID,
                                                         "listNumber": databack[j].SerialNo,
                                                         "listTime": databack[j].CreateTime,
@@ -434,6 +446,7 @@
                                         console.log(res.data)
                                         var databack = res.data
                                         var statuscode = ''
+                                        var onfinish = false
                                         if (databack.length < 5) {
                                             _this.end2 = true
                                         } else {
@@ -451,6 +464,9 @@
                                                         statuscode = "0"
                                                     } else if (databack[j].OrderStatus == "维修中") {
                                                         statuscode = "1"
+                                                    } else if (databack[j].OrderStatus == "维修中-部分完成") {
+                                                        statuscode = "1"
+                                                        onfinish = true
                                                     } else if (databack[j].OrderStatus == "已完成") {
                                                         statuscode = "2"
                                                     } else if (databack[j].OrderStatus == "已中止") {
@@ -459,6 +475,7 @@
                                                         statuscode = "4"
                                                     }
                                                     var json = {
+                                                        onfinish: onfinish,
                                                         "listId": databack[j].OID,
                                                         "listNumber": databack[j].SerialNo,
                                                         "listTime": databack[j].CreateTime,
@@ -483,6 +500,7 @@
                                         console.log(res.data)
                                         var databack = res.data
                                         var statuscode = ''
+                                        var onfinish = false
                                         if (databack.length < 5) {
                                             _this.end3 = true
                                         } else {
@@ -500,6 +518,9 @@
                                                         statuscode = "0"
                                                     } else if (databack[j].OrderStatus == "维修中") {
                                                         statuscode = "1"
+                                                    } else if (databack[j].OrderStatus == "维修中-部分完成") {
+                                                        statuscode = "1"
+                                                        onfinish = true
                                                     } else if (databack[j].OrderStatus == "已完成") {
                                                         statuscode = "2"
                                                     } else if (databack[j].OrderStatus == "已中止") {
@@ -508,6 +529,7 @@
                                                         statuscode = "4"
                                                     }
                                                     var json = {
+                                                        onfinish: onfinish,
                                                         "listId": databack[j].OID,
                                                         "listNumber": databack[j].SerialNo,
                                                         "listTime": databack[j].CreateTime,
@@ -532,6 +554,7 @@
                                         console.log(res.data)
                                         var databack = res.data
                                         var statuscode = ''
+                                        var onfinish = false
                                         if (databack.length < 5) {
                                             _this.end4 = true
                                         } else {
@@ -549,6 +572,9 @@
                                                         statuscode = "0"
                                                     } else if (databack[j].OrderStatus == "维修中") {
                                                         statuscode = "1"
+                                                    } else if (databack[j].OrderStatus == "维修中-部分完成") {
+                                                        statuscode = "1"
+                                                        onfinish = true
                                                     } else if (databack[j].OrderStatus == "已完成") {
                                                         statuscode = "2"
                                                     } else if (databack[j].OrderStatus == "已中止") {
@@ -557,6 +583,7 @@
                                                         statuscode = "4"
                                                     }
                                                     var json = {
+                                                        onfinish: onfinish,
                                                         "listId": databack[j].OID,
                                                         "listNumber": databack[j].SerialNo,
                                                         "listTime": databack[j].CreateTime,
@@ -581,6 +608,7 @@
                                         console.log(res.data)
                                         var databack = res.data
                                         var statuscode = ''
+                                        var onfinish = false
                                         if (databack.length < 5) {
                                             _this.end5 = true
                                         } else {
@@ -598,6 +626,9 @@
                                                         statuscode = "0"
                                                     } else if (databack[j].OrderStatus == "维修中") {
                                                         statuscode = "1"
+                                                    } else if (databack[j].OrderStatus == "维修中-部分完成") {
+                                                        statuscode = "1"
+                                                        onfinish = true
                                                     } else if (databack[j].OrderStatus == "已完成") {
                                                         statuscode = "2"
                                                     } else if (databack[j].OrderStatus == "已中止") {
@@ -606,6 +637,7 @@
                                                         statuscode = "4"
                                                     }
                                                     var json = {
+                                                        onfinish: onfinish,
                                                         "listId": databack[j].OID,
                                                         "listNumber": databack[j].SerialNo,
                                                         "listTime": databack[j].CreateTime,
@@ -632,6 +664,7 @@
                                         console.log(res.data)
                                         var databack = res.data
                                         var statuscode = ''
+                                        var onfinish = false
                                         if (databack.length < 5) {
                                             _this.end1 = true
                                         } else {
@@ -649,6 +682,9 @@
                                                         statuscode = "0"
                                                     } else if (databack[j].OrderStatus == "维修中") {
                                                         statuscode = "1"
+                                                    } else if (databack[j].OrderStatus == "维修中-部分完成") {
+                                                        statuscode = "1"
+                                                        onfinish = true
                                                     } else if (databack[j].OrderStatus == "已完成") {
                                                         statuscode = "2"
                                                     } else if (databack[j].OrderStatus == "已中止") {
@@ -657,6 +693,7 @@
                                                         statuscode = "4"
                                                     }
                                                     var json = {
+                                                        onfinish: onfinish,
                                                         "listId": databack[j].OID,
                                                         "listNumber": databack[j].SerialNo,
                                                         "listTime": databack[j].CreateTime,
@@ -681,6 +718,7 @@
                                         console.log(res.data)
                                         var databack = res.data
                                         var statuscode = ''
+                                        var onfinish = false
                                         if (databack.length < 5) {
                                             _this.end2 = true
                                         } else {
@@ -698,6 +736,9 @@
                                                         statuscode = "0"
                                                     } else if (databack[j].OrderStatus == "维修中") {
                                                         statuscode = "1"
+                                                    } else if (databack[j].OrderStatus == "维修中-部分完成") {
+                                                        statuscode = "1"
+                                                        onfinish = true
                                                     } else if (databack[j].OrderStatus == "已完成") {
                                                         statuscode = "2"
                                                     } else if (databack[j].OrderStatus == "已中止") {
@@ -706,6 +747,7 @@
                                                         statuscode = "4"
                                                     }
                                                     var json = {
+                                                        onfinish: onfinish,
                                                         "listId": databack[j].OID,
                                                         "listNumber": databack[j].SerialNo,
                                                         "listTime": databack[j].CreateTime,
@@ -730,6 +772,7 @@
                                         console.log(res.data)
                                         var databack = res.data
                                         var statuscode = ''
+                                        var onfinish = false
                                         if (databack.length < 5) {
                                             _this.end3 = true
                                         } else {
@@ -747,6 +790,9 @@
                                                         statuscode = "0"
                                                     } else if (databack[j].OrderStatus == "维修中") {
                                                         statuscode = "1"
+                                                    } else if (databack[j].OrderStatus == "维修中-部分完成") {
+                                                        statuscode = "1"
+                                                        onfinish = true
                                                     } else if (databack[j].OrderStatus == "已完成") {
                                                         statuscode = "2"
                                                     } else if (databack[j].OrderStatus == "已中止") {
@@ -755,6 +801,7 @@
                                                         statuscode = "4"
                                                     }
                                                     var json = {
+                                                        onfinish: onfinish,
                                                         "listId": databack[j].OID,
                                                         "listNumber": databack[j].SerialNo,
                                                         "listTime": databack[j].CreateTime,
@@ -779,6 +826,7 @@
                                         console.log(res.data)
                                         var databack = res.data
                                         var statuscode = ''
+                                        var onfinish = false
                                         if (databack.length < 5) {
                                             _this.end4 = true
                                         } else {
@@ -796,6 +844,9 @@
                                                         statuscode = "0"
                                                     } else if (databack[j].OrderStatus == "维修中") {
                                                         statuscode = "1"
+                                                    } else if (databack[j].OrderStatus == "维修中-部分完成") {
+                                                        statuscode = "1"
+                                                        onfinish = true
                                                     } else if (databack[j].OrderStatus == "已完成") {
                                                         statuscode = "2"
                                                     } else if (databack[j].OrderStatus == "已中止") {
@@ -804,6 +855,7 @@
                                                         statuscode = "4"
                                                     }
                                                     var json = {
+                                                        onfinish: onfinish,
                                                         "listId": databack[j].OID,
                                                         "listNumber": databack[j].SerialNo,
                                                         "listTime": databack[j].CreateTime,
@@ -828,6 +880,7 @@
                                         console.log(res.data)
                                         var databack = res.data
                                         var statuscode = ''
+                                        var onfinish = false
                                         if (databack.length < 5) {
                                             _this.end5 = true
                                         } else {
@@ -845,6 +898,9 @@
                                                         statuscode = "0"
                                                     } else if (databack[j].OrderStatus == "维修中") {
                                                         statuscode = "1"
+                                                    } else if (databack[j].OrderStatus == "维修中-部分完成") {
+                                                        statuscode = "1"
+                                                        onfinish = true
                                                     } else if (databack[j].OrderStatus == "已完成") {
                                                         statuscode = "2"
                                                     } else if (databack[j].OrderStatus == "已中止") {
@@ -853,6 +909,7 @@
                                                         statuscode = "4"
                                                     }
                                                     var json = {
+                                                        onfinish: onfinish,
                                                         "listId": databack[j].OID,
                                                         "listNumber": databack[j].SerialNo,
                                                         "listTime": databack[j].CreateTime,
@@ -1030,6 +1087,7 @@
                             console.log(res.data)
                             var databack = res.data
                             var statuscode = ''
+                            var onfinish = false
                             if (databack.length < 5) {
                                 _this.end = true
                             } else {
@@ -1049,12 +1107,18 @@
                                             statuscode = "0"
                                         } else if (databack[j].OrderStatus == "维修中") {
                                             statuscode = "1"
+                                        } else if (databack[j].OrderStatus == "维修中-部分完成") {
+                                            statuscode = "1"
+                                            onfinish = true
                                         } else if (databack[j].OrderStatus == "已完成") {
                                             statuscode = "2"
                                         } else if (databack[j].OrderStatus == "已中止") {
                                             statuscode = "3"
+                                        } else if (databack[j].OrderStatus == "反馈中") {
+                                            statuscode = "4"
                                         }
                                         var json = {
+                                            onfinish: onfinish,
                                             "listId": databack[j].OID,
                                             "listNumber": databack[j].SerialNo,
                                             "listTime": databack[j].CreateTime,
@@ -1084,6 +1148,7 @@
                             console.log(res.data)
                             var databack = res.data
                             var statuscode = ''
+                            var onfinish = false
                             if (databack.length < 5) {
                                 _this.end1 = true
                             } else {
@@ -1102,12 +1167,18 @@
                                             statuscode = "0"
                                         } else if (databack[j].OrderStatus == "维修中") {
                                             statuscode = "1"
+                                        } else if (databack[j].OrderStatus == "维修中-部分完成") {
+                                            statuscode = "1"
+                                            onfinish = true
                                         } else if (databack[j].OrderStatus == "已完成") {
                                             statuscode = "2"
                                         } else if (databack[j].OrderStatus == "已中止") {
                                             statuscode = "3"
+                                        } else if (databack[j].OrderStatus == "反馈中") {
+                                            statuscode = "4"
                                         }
                                         var json = {
+                                            onfinish: onfinish,
                                             "listId": databack[j].OID,
                                             "listNumber": databack[j].SerialNo,
                                             "listTime": databack[j].CreateTime,
@@ -1136,6 +1207,7 @@
                             console.log(res.data)
                             var databack = res.data
                             var statuscode = ''
+                            var onfinish = false
                             if (databack.length < 5) {
                                 _this.end2 = true
                             } else {
@@ -1155,12 +1227,18 @@
                                             statuscode = "0"
                                         } else if (databack[j].OrderStatus == "维修中") {
                                             statuscode = "1"
+                                        } else if (databack[j].OrderStatus == "维修中-部分完成") {
+                                            statuscode = "1"
+                                            onfinish = true
                                         } else if (databack[j].OrderStatus == "已完成") {
                                             statuscode = "2"
                                         } else if (databack[j].OrderStatus == "已中止") {
                                             statuscode = "3"
+                                        } else if (databack[j].OrderStatus == "反馈中") {
+                                            statuscode = "4"
                                         }
                                         var json = {
+                                            onfinish: onfinish,
                                             "listId": databack[j].OID,
                                             "listNumber": databack[j].SerialNo,
                                             "listTime": databack[j].CreateTime,
@@ -1189,6 +1267,7 @@
                             console.log(res.data)
                             var databack = res.data
                             var statuscode = ''
+                            var onfinish = false
                             if (databack.length < 5) {
                                 _this.end3 = true
                             } else {
@@ -1208,12 +1287,18 @@
                                             statuscode = "0"
                                         } else if (databack[j].OrderStatus == "维修中") {
                                             statuscode = "1"
+                                        } else if (databack[j].OrderStatus == "维修中-部分完成") {
+                                            statuscode = "1"
+                                            onfinish = true
                                         } else if (databack[j].OrderStatus == "已完成") {
                                             statuscode = "2"
                                         } else if (databack[j].OrderStatus == "已中止") {
                                             statuscode = "3"
+                                        } else if (databack[j].OrderStatus == "反馈中") {
+                                            statuscode = "4"
                                         }
                                         var json = {
+                                            onfinish: onfinish,
                                             "listId": databack[j].OID,
                                             "listNumber": databack[j].SerialNo,
                                             "listTime": databack[j].CreateTime,
@@ -1242,6 +1327,7 @@
                             console.log(res.data)
                             var databack = res.data
                             var statuscode = ''
+                            var onfinish = false
                             if (databack.length < 5) {
                                 _this.end4 = true
                             } else {
@@ -1262,12 +1348,18 @@
                                             statuscode = "0"
                                         } else if (databack[j].OrderStatus == "维修中") {
                                             statuscode = "1"
+                                        } else if (databack[j].OrderStatus == "维修中-部分完成") {
+                                            statuscode = "1"
+                                            onfinish = true
                                         } else if (databack[j].OrderStatus == "已完成") {
                                             statuscode = "2"
                                         } else if (databack[j].OrderStatus == "已中止") {
                                             statuscode = "3"
+                                        } else if (databack[j].OrderStatus == "反馈中") {
+                                            statuscode = "4"
                                         }
                                         var json = {
+                                            onfinish: onfinish,
                                             "listId": databack[j].OID,
                                             "listNumber": databack[j].SerialNo,
                                             "listTime": databack[j].CreateTime,
@@ -1296,6 +1388,7 @@
                             console.log(res.data)
                             var databack = res.data
                             var statuscode = ''
+                            var onfinish = false
                             if (databack.length < 5) {
                                 _this.end5 = true
                             } else {
@@ -1316,6 +1409,9 @@
                                             statuscode = "0"
                                         } else if (databack[j].OrderStatus == "维修中") {
                                             statuscode = "1"
+                                        } else if (databack[j].OrderStatus == "维修中-部分完成") {
+                                            statuscode = "1"
+                                            onfinish = true
                                         } else if (databack[j].OrderStatus == "已完成") {
                                             statuscode = "2"
                                         } else if (databack[j].OrderStatus == "已中止") {
@@ -1324,6 +1420,7 @@
                                             statuscode = "4"
                                         }
                                         var json = {
+                                            onfinish: onfinish,
                                             "listId": databack[j].OID,
                                             "listNumber": databack[j].SerialNo,
                                             "listTime": databack[j].CreateTime,
@@ -1341,10 +1438,10 @@
             },
         },
         onload() {
-            console.log('on load')
+            // console.log('on load')
         },
         onReady() {
-            console.log('page index onReady', this)
+            // console.log('page index onReady', this)
         },
         mounted() {
 
@@ -1382,6 +1479,14 @@
                     _this.loaddatas()
                 }
             }, 1500)
+            setTimeout(() => {
+                _this.user = wx.getStorageSync("user")
+                _this.login = wx.getStorageSync('UID')
+                _this.userName = wx.getStorageSync("UserName")
+                _this.DName = wx.getStorageSync("DName")
+                _this.WName = wx.getStorageSync("WName")
+
+            }, 3000)
             //roel init
 
 
@@ -1415,7 +1520,7 @@
         border: none;
     }
 
-    .graym,.gray {
+    .graym, .gray {
         color: gray;
     }
 
@@ -1603,9 +1708,9 @@
 
     .listicon {
         font-size: 29px;
-        color: #ACACAC;
+        /*color: #ACACAC;*/
         position: relative;
-        top: 4rpx;
+        top: 10rpx;
     }
 
     .tdetail {

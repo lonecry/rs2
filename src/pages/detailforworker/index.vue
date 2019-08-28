@@ -72,9 +72,12 @@
             <span class="ititle" style="float: none;">详细位置：</span>
             <span class="address addressworker">{{origin.address }}</span>
         </div>
-
+        <div class="ipts">
+            <span class="ititle">台单号：</span>
+            <span class="ript">{{origin.taidanhao}}</span>
+        </div>
         <div class="ipts" v-if="detail.state!=='0'&&detail.state!=='4'"
-             style="padding: 10rpx;border: 2rpx dashed  rgba(255,209,119,0.96);box-sizing: border-box;width: 92%;">
+             style="padding: 10rpx;border: 2rpx dashed  rgba(255,209,119,0.96);box-sizing: border-box;width: 92%;margin-top: 22rpx;">
             <span>维修详情：</span>
             <div class="weixiug" v-for="(item,index) in  Repairs" :key="item.RPID">
                 <div class="lists">
@@ -113,11 +116,7 @@
                 </i-button>
             </div>
         </div>
-        <!--   <div class="ipts">
-               <span class="ititle">台单号：</span>
-               <span class="ript">{{origin.taidanhao}}</span>
-           </div>
-          -->
+
         <div class="ipts" v-if="OrderType =='反馈单'">
             <span class="ititle" style="float: none;color: red"> <i-icon type="warning_fill"/> 该订单已经成功反馈 </span>
         </div>
