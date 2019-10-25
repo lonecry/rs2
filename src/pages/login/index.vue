@@ -114,6 +114,8 @@
                             wx.setStorageSync("Mobile", res.data.Mobile);
                             wx.setStorageSync("UserName", res.data.UserName);
                             wx.setStorageSync("Role", res.data.Role);
+                            wx.setStorageSync("DName", res.data.DName);
+                            wx.setStorageSync("WName", res.data.WName);
                             const url = '../indexswiper/main'
                             mpvue.navigateTo({url})
                         } else {
@@ -196,7 +198,7 @@
         background: white;
         border-radius: 18rpx;
         text-align: left;
-        border: 1rpx solid #b1b1b1;
+        border: 2rpx solid #b1b1b1;
         position: relative;
         margin-bottom: 50rpx;
 
