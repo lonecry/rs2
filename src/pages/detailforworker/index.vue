@@ -74,7 +74,7 @@
         </div>
 
         <div class="ipts">
-            <span class="ititle">台单号：</span>
+            <span class="ititle">台帐号：</span>
             <span class="ript">{{origin.taidanhao?origin.taidanhao:'空'}}</span>
         </div>
 

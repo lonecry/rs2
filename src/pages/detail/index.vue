@@ -66,7 +66,7 @@
                                                                                   class="usericon"/><span
                     class="spans  ">{{detail.origin.station}}</span></span>
                 <span class="bxlist"><span class="spans inspan">详细位置:</span> {{detail.origin.address}} </span>
-                <span class="bxlist"><span class="spans inspan">台单号:</span> {{detail.origin.taidanhao}} </span>
+                <span class="bxlist"><span class="spans inspan">台帐号:</span> {{detail.origin.taidanhao}} </span>
             </div>
         </div>
         <i-button v-if="judgement" type="primary" class="judge" @click="judgeToggle">评 价</i-button>
